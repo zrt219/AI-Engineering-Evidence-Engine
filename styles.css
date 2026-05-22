@@ -1059,6 +1059,7 @@ body {
     flex-direction: column;
     height: 450px;
     margin-bottom: 1.5rem;
+    min-width: 0;
 }
 
 .terminal-header {
@@ -1095,15 +1096,19 @@ body {
 .terminal-body {
     padding: 0.8rem;
     overflow-y: auto;
+    overflow-x: hidden;
     font-family: var(--font-mono);
     font-size: 0.85rem;
     line-height: 1.6;
     flex-grow: 1;
+    min-width: 0;
 }
 
 .log-line {
     margin-bottom: 0.4rem;
-    word-break: break-all;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: normal;
 }
 
 .log-line.system { color: var(--color-blue); }
@@ -1849,6 +1854,7 @@ body {
     font-size: 0.9rem;
     gap: 0.5rem;
     flex-shrink: 0;
+    min-width: 0;
 }
 
 .terminal-prompt {
@@ -1859,6 +1865,7 @@ body {
 
 #terminalPromptInput {
     flex: 1;
+    min-width: 0;
     background: transparent;
     border: none;
     outline: none;
@@ -2477,9 +2484,10 @@ body {
     opacity: 0.95 !important;
     box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px rgba(59, 130, 246, 0.3);
     transition: box-shadow 0.2s;
-    width: 450px;
-    max-width: min(450px, calc(100vw - 2rem));
-    max-height: min(450px, calc(100vh - 2rem));
+    width: min(680px, calc(100vw - 2rem));
+    height: min(430px, calc(100vh - 2rem));
+    max-width: calc(100vw - 2rem);
+    max-height: calc(100vh - 2rem);
 }
 .terminal-container.dragging {
     opacity: 0.82 !important;

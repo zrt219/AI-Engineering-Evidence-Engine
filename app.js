@@ -2382,6 +2382,18 @@ document.addEventListener("DOMContentLoaded", () => {
     let termInitialX = 0;
     let termInitialY = 0;
 
+    function clampTerminalPosition(left, top) {
+        const margin = 12;
+        const width = terminalContainer.offsetWidth || 680;
+        const height = terminalContainer.offsetHeight || 420;
+        const maxLeft = Math.max(margin, window.innerWidth - width - margin);
+        const maxTop = Math.max(margin, window.innerHeight - height - margin);
+        return {
+            left: Math.min(Math.max(left, margin), maxLeft),
+            top: Math.min(Math.max(top, margin), maxTop)
+        };
+    }
+
     if (terminalHeader && terminalContainer) {
         terminalHeader.addEventListener("mousedown", (e) => {
             if (e.target.closest('.btn-dock')) return; 
@@ -2408,23 +2420,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 terminalContainer.classList.remove("hero-snapped");
                 terminalContainer.classList.add("undocked");
                 terminalContainer.classList.add("active");
-                terminalContainer.style.width = "450px";
-                terminalContainer.style.height = "450px";
+                terminalContainer.style.width = "min(680px, calc(100vw - 2rem))";
+                terminalContainer.style.height = "min(430px, calc(100vh - 2rem))";
                 
                 // Position centered under the cursor to prevent sudden layout jumps
-                const newLeft = e.clientX - 225;
-                const newTop = e.clientY - 20;
-                terminalContainer.style.left = newLeft + "px";
-                terminalContainer.style.top = newTop + "px";
-                termInitialX = newLeft;
-                termInitialY = newTop;
+                const nextPos = clampTerminalPosition(e.clientX - 340, e.clientY - 20);
+                terminalContainer.style.left = nextPos.left + "px";
+                terminalContainer.style.top = nextPos.top + "px";
+                termInitialX = nextPos.left;
+                termInitialY = nextPos.top;
                 dragStartX = e.clientX;
                 dragStartY = e.clientY;
             } else {
-                terminalContainer.style.left = rect.left + "px";
-                terminalContainer.style.top = rect.top + "px";
-                termInitialX = rect.left;
-                termInitialY = rect.top;
+                const nextPos = clampTerminalPosition(rect.left, rect.top);
+                terminalContainer.style.left = nextPos.left + "px";
+                terminalContainer.style.top = nextPos.top + "px";
+                termInitialX = nextPos.left;
+                termInitialY = nextPos.top;
             }
 
             terminalContainer.classList.add("dragging");
@@ -2435,9 +2447,10 @@ document.addEventListener("DOMContentLoaded", () => {
             
             const dx = e.clientX - dragStartX;
             const dy = e.clientY - dragStartY;
+            const nextPos = clampTerminalPosition(termInitialX + dx, termInitialY + dy);
             
-            terminalContainer.style.left = (termInitialX + dx) + "px";
-            terminalContainer.style.top = (termInitialY + dy) + "px";
+            terminalContainer.style.left = nextPos.left + "px";
+            terminalContainer.style.top = nextPos.top + "px";
 
             const visRect = visualizerPanel.getBoundingClientRect();
             if (e.clientX >= visRect.left && e.clientX <= visRect.right &&
