@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "name": "zhane-grey-evidence-dashboard",
+  "cleanUrls": true,
+  "routes": [
+    { "handle": "filesystem" }
+  ]
+}

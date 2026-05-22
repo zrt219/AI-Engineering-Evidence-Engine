@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zhane Grey's AI Engineering Evidence Engine Dashboard</title>
+    <meta name="description" content="Interactive architecture viewer & simulator for the automated 3-Agent RAG evidence pipeline, verification rules, and self-updating refresh loop.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div class="glow-container">
+        <div class="blur-glow blur-blue"></div>
+        <div class="blur-glow blur-purple"></div>
+        <div class="grid-overlay"></div>
+    </div>
+
+    <div class="dashboard-wrapper">
+        <!-- HEADER Section -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="header-meta" style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem;">
+                    <span class="system-badge" style="margin-bottom: 0;">System Atlas v2.4</span>
+                    <a href="https://github.com/zrt219" target="_blank" class="github-badge" id="githubLink">
+                        <svg class="github-icon" viewBox="0 0 16 16" version="1.1" width="12" height="12" aria-hidden="true" style="fill: currentColor; margin-right: 4px; vertical-align: middle;"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                        github.com/zrt219
+                    </a>
+                    <span class="audit-badge" style="background: rgba(168, 85, 247, 0.1); color: #c084fc; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 6px; border: 1px solid rgba(168, 85, 247, 0.2); text-transform: uppercase; letter-spacing: 0.05em; display: inline-block;">Audit-Ready: OpenAI / Anthropic</span>
+                </div>
+                <h1>AI Engineering Evidence Engine</h1>
+                <p class="subtitle">Interactive Architecture & Automation Workspace for Zhane Grey's Evidence Pipeline</p>
+            </div>
+            <div class="header-right">
+                <div class="stats-strip">
+                    <div class="stat-box">
+                        <span class="label">Primary Target</span>
+                        <strong class="value highlight-blue">Zhane Grey Portfolio</strong>
+                    </div>
+                    <div class="stat-box">
+                        <span class="label">Ingest Posture</span>
+                        <strong class="value highlight-green" id="postureLabel">Strict Ingress</strong>
+                    </div>
+                    <div class="stat-box">
+                        <span class="label">System State</span>
+                        <strong class="value pulse-dot" id="systemState">Online / Idle</strong>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN INTERACTIVE SECTION -->
+        <main class="dashboard-grid">
+            
+            <!-- LEFT PANEL: Navigation & Diagram Selection -->
+            <aside class="panel nav-panel glassmorphic">
+                <div class="panel-header">
+                    <span class="kicker">Core Subsystems</span>
+                    <h2>Interactive Map Selector</h2>
+                </div>
+                
+                <div class="selector-stack">
+                    <button class="selector-card active" id="btn-doctrine" data-diagram="doctrine">
+                        <div class="card-num">01</div>
+                        <div class="card-content">
+                            <h3>Core Verification Doctrine</h3>
+                            <p>Ingestion boundaries, credential redaction gates, and evidence confidence grading.</p>
+                        </div>
+                        <span class="active-indicator"></span>
+                    </button>
+
+                    <button class="selector-card" id="btn-pipeline" data-diagram="pipeline">
+                        <div class="card-num">02</div>
+                        <div class="card-content">
+                            <h3>3-Agent Daily Refresh Pipeline</h3>
+                            <p>Data orchestrations, delta checks, and outputs of SCRIBE, ATLAS, and FORGE.</p>
+                        </div>
+                        <span class="active-indicator"></span>
+                    </button>
+
+                    <button class="selector-card" id="btn-workflow" data-diagram="workflow">
+                        <div class="card-num">03</div>
+                        <div class="card-content">
+                            <h3>Self-Updating Refresh Loop</h3>
+                            <p>The state machine triggered by refresh commands, L1-L3 backups, and exports.</p>
+                        </div>
+                        <span class="active-indicator"></span>
+                    </button>
+                </div>
+
+                <div class="utility-card">
+                    <div class="kicker">Workspace Scope</div>
+                    <div class="directory-list">
+                        <div class="dir-item"><span>📁 AI_ENGINEERING_ROOT</span><span class="pill-sm">MD / DOCX</span></div>
+                        <div class="dir-item"><span>📁 PORTFOLIO_ROOT</span><span class="pill-sm">React/TS</span></div>
+                        <div class="dir-item"><span>📁 AI_RAG_DEMO_ROOT</span><span class="pill-sm">FastAPI</span></div>
+                        <div class="dir-item"><span>📁 BLOCKCHAIN_CORPUS_ROOT</span><span class="pill-sm">Foundry</span></div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- MIDDLE WORKSPACE: Interactive Diagram & Hotspots -->
+            <section class="panel stage-panel glassmorphic">
+                <div class="panel-header stage-header">
+                    <div>
+                        <span class="kicker" id="stageKicker">Diagram Visualizer</span>
+                        <h2 id="stageTitle">Core Verification Doctrine</h2>
+                    </div>
+                <div class="badge-row" style="display: flex; align-items: center; gap: 0.75rem;">
+                    <!-- Diagram Contrast Theme Toggle -->
+                    <div class="theme-toggle-wrapper" style="display: flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 0.25rem 0.5rem; border-radius: 6px;">
+                        <span class="theme-label" style="font-size: 0.68rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.03em; user-select: none;">Blueprint Mode</span>
+                        <label class="switch" style="position: relative; display: inline-block; width: 28px; height: 16px;">
+                            <input type="checkbox" id="diagramThemeToggle" checked style="opacity: 0; width: 0; height: 0;">
+                            <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .3s; border-radius: 34px; border: 1px solid var(--border-color);"></span>
+                        </label>
+                    </div>
+                    <span class="pill-badge" id="badge-tech">XeLaTeX</span>
+                    <span class="pill-badge" id="badge-scope">Governance</span>
+                </div>
+                </div>
+
+                <div class="viewer-frame">
+                    <div class="image-wrapper" id="imageWrapper">
+                        <img id="activeDiagram" src="images/core_doctrine_diagram.png" alt="Core Verification Doctrine Flowchart">
+                        
+                        <!-- Dynamic Hotspots Layer -->
+                        <div class="hotspot-layer" id="hotspotLayer">
+                            <!-- Hotspots will be dynamically injected by JS based on the active diagram -->
+                        </div>
+                    </div>
+                    <div class="frame-scanline"></div>
+                </div>
+
+                <!-- Active Focus Explanation Footer -->
+                <div class="stage-footer" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div class="focus-details" style="flex: 1; padding-right: 1.5rem;">
+                        <span class="kicker" id="focusNodeKicker">Active Node Focus</span>
+                        <h3 id="focusNodeTitle">Raw Developer Activity Ingestion</h3>
+                        <p id="focusNodeDescription">All commits, files, Foundry unit tests, and terminal outputs are parsed by the ingestion framework to check for daily changes in the workspace repositories.</p>
+                    </div>
+                    <div class="focus-actions" style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; flex-shrink: 0;">
+                        <div class="focus-metrics" id="focusNodeMetrics" style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem;">
+                            <!-- Key values injected by JS -->
+                        </div>
+                        <!-- PULSING ACTION BUTTON FOR THE SOURCE DRAWER -->
+                        <button id="btnInspectCodeProof" class="btn-inspect-proof" style="display: flex; align-items: center; gap: 0.4rem; background: rgba(59, 130, 246, 0.12); color: var(--color-blue); border: 1px solid rgba(59, 130, 246, 0.35); padding: 0.45rem 0.9rem; border-radius: 6px; font-family: var(--font-sans); font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 12px rgba(59, 130, 246, 0.15);">
+                            🔍 View Source Code Proof
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIGHT PANEL: Live Simulator Controls & Technical Logs -->
+            <aside class="panel control-panel glassmorphic">
+                <div class="panel-header">
+                    <span class="kicker">Execution & Ingest</span>
+                    <h2>Automation Console</h2>
+                </div>
+
+                <div class="action-card">
+                    <p class="card-desc">Execute a simulated live RAG update of the entire AI engineering workspace deliverables directly on this dashboard interface.</p>
+                    <div style="display: flex; gap: 0.5rem; flex-direction: column;">
+                        <button class="btn-refresh" id="btnRefreshSim">
+                            <span class="btn-icon">⚡</span>
+                            <span class="btn-text">Run Single Refresh</span>
+                        </button>
+                        <button class="btn-refresh" id="btnLoopSim" style="background: linear-gradient(135deg, var(--color-purple) 0%, rgba(139, 92, 246, 0.45) 100%); border: 1px solid rgba(139, 92, 246, 0.3); box-shadow: 0 4px 15px rgba(139, 92, 246, 0.15);">
+                            <span class="btn-icon">🔄</span>
+                            <span class="btn-text">Start Loop Mode</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Interactive Tab Selectors -->
+                <div class="console-tabs">
+                    <button class="console-tab active" id="tab-terminal">Refresher Log</button>
+                    <button class="console-tab" id="tab-report">Recruiter Report</button>
+                </div>
+
+                <!-- TAB 1 CONTENT: Terminal Log Box -->
+                <div class="terminal-container tab-content active" id="content-terminal">
+                    <div class="terminal-header" id="terminalHeader">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span class="drag-handle" title="Drag to hero area">⋮⋮</span>
+                            <span class="term-title">system_refresher_agent.log</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <button class="btn-dock" id="btnDockTerminal" style="display: none;" title="Dock back to sidebar">⤵ Dock</button>
+                            <div class="term-dots">
+                                <span class="dot red"></span>
+                                <span class="dot yellow"></span>
+                                <span class="dot green"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="terminal-body" id="terminalLogs">
+                        <div class="log-line system">[SYSTEM] Dashboard console linked. Ingress ready.</div>
+                        <div class="log-line info">[INFO] Select a node on the diagram or click 'Run Refresh Simulation' above.</div>
+                    </div>
+                    <div class="terminal-suggestions" id="terminalSuggestions">
+                        <span class="suggestions-label">Quick actions:</span>
+                        <button class="suggestion-chip" data-cmd="git status">git status</button>
+                        <button class="suggestion-chip" data-cmd="git diff">git diff</button>
+                        <button class="suggestion-chip" data-cmd="cat agents.md">cat agents.md</button>
+                        <button class="suggestion-chip" data-cmd="vercel deploy">vercel deploy</button>
+                    </div>
+                    <div class="terminal-input-row">
+                        <span class="terminal-prompt">$</span>
+                        <input type="text" id="terminalPromptInput" placeholder="Type 'help' or command... (e.g. 'git status', 'vercel deploy')" autocomplete="off" spellcheck="false">
+                    </div>
+                </div>
+
+                <!-- TAB 2 CONTENT: Interactive Recruiter Report -->
+                <div class="report-container tab-content" id="content-report">
+                    <div class="report-paper">
+                        <div class="report-paper-header">
+                            <h3>Daily Evidence Audit Report</h3>
+                            <span class="report-date" id="reportDate">2026-05-22</span>
+                        </div>
+
+                        <div class="report-card" data-link-diagram="doctrine" data-link-spot="1">
+                            <div class="report-card-header">
+                                <h4>1. Verification Posture</h4>
+                                <span class="report-status pass">STRONG</span>
+                            </div>
+                            <div class="report-card-body">
+                                <p>Total codebase claims analyzed: <strong>15</strong>. Keep queue: <strong>14</strong>. Downgraded/Removed: <strong>1</strong>.</p>
+                            </div>
+                        </div>
+
+                        <div class="report-card" id="redactionAuditorCard" data-link-diagram="doctrine" data-link-spot="2">
+                            <div class="report-card-header">
+                                <h4>2. Redaction Audit</h4>
+                                <span class="report-status pass">SECURE</span>
+                            </div>
+                            <div class="report-card-body">
+                                <p>Credential leaks: <strong>0</strong>. Detected keys: <strong>2</strong> (Redacted successfully).</p>
+                                
+                                <!-- Redaction Interactive Option Controls -->
+                                <div class="redaction-controls" style="display: flex; gap: 0.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap;">
+                                    <select id="redactSelect" class="redact-select" style="flex: 1; min-width: 120px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: var(--text-primary); font-family: var(--font-sans); font-size: 0.68rem; padding: 0.2rem; border-radius: 4px; outline: none; cursor: pointer; transition: border-color 0.2s ease;">
+                                        <option value="stripe">Stripe Secret Token</option>
+                                        <option value="supabase">Supabase Database URL</option>
+                                        <option value="cookie">Session Cookie Header</option>
+                                        <option value="mnemonic">Web3 Wallet Mnemonic</option>
+                                    </select>
+                                    <button id="btnRedactScan" class="btn-redact-scan" style="background: var(--color-blue); color: #fff; border: none; font-size: 0.68rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 4px; cursor: pointer; transition: all 0.2s ease;">Scan & Redact</button>
+                                </div>
+
+                                <!-- Side-by-Side Redaction previewer with scanning overlay -->
+                                <div class="redaction-split-wrapper" style="position: relative; overflow: hidden; border-radius: 6px; margin-top: 0.5rem;">
+                                    <div class="redaction-split">
+                                        <div class="redaction-pane raw">
+                                            <span class="pane-title">Raw Log Input</span>
+                                            <pre><code id="redactRawCode">token = "sk_live_51NjU45k2Jfs82Skdjf9"</code></pre>
+                                        </div>
+                                        <div class="redaction-pane sanitized">
+                                            <span class="pane-title">Sanitized Report</span>
+                                            <pre><code id="redactCleanCode">token = "[REDACTED_TOKEN]"</code></pre>
+                                        </div>
+                                    </div>
+                                    <div class="scanner-bar" id="scannerBar"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="report-card" data-link-diagram="workflow" data-link-spot="1">
+                            <div class="report-card-header">
+                                <h4>3. Three-Level Backups</h4>
+                                <span class="report-status pass">VERIFIED</span>
+                            </div>
+                            <div class="report-card-body">
+                                <p>L1 Snapshot: <strong>Pass</strong>. L2 Zip: <strong>Pass</strong>. L3 Public Sanitized: <strong>Pass</strong>.</p>
+                                <div class="report-hashes">
+                                    <code>L1 manifest: 8cf3a7e...</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 14-Day Velocity Graph Card -->
+                        <div class="report-card" id="commitHistoryCard">
+                            <div class="report-card-header">
+                                <h4>3b. 14-Day Development Velocity</h4>
+                                <span class="report-status pass" style="background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.25); color: var(--color-blue)">ACTIVE</span>
+                            </div>
+                            <div class="report-card-body">
+                                <p style="margin-bottom: 0.5rem; font-size: 0.72rem; color: var(--text-secondary);">Hover nodes to inspect live developer session commit telemetry:</p>
+                                <div class="svg-graph-container" style="position: relative; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.03); border-radius: 8px; padding: 0.5rem; overflow: visible;">
+                                    <svg viewBox="0 0 500 150" class="svg-graph" style="width: 100%; height: auto; overflow: visible;">
+                                        <defs>
+                                            <linearGradient id="graphGlowGrad" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="var(--color-blue)" stop-opacity="0.45"/>
+                                                <stop offset="100%" stop-color="var(--color-blue)" stop-opacity="0.0"/>
+                                            </linearGradient>
+                                            <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+                                                <stop offset="0%" stop-color="var(--color-blue)"/>
+                                                <stop offset="50%" stop-color="var(--color-purple)"/>
+                                                <stop offset="100%" stop-color="var(--color-green)"/>
+                                            </linearGradient>
+                                        </defs>
+                                        <!-- Grid lines -->
+                                        <line x1="10" y1="20" x2="490" y2="20" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 2" />
+                                        <line x1="10" y1="60" x2="490" y2="60" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 2" />
+                                        <line x1="10" y1="100" x2="490" y2="100" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 2" />
+                                        <line x1="10" y1="130" x2="490" y2="130" stroke="rgba(255,255,255,0.1)" />
+                                        
+                                        <!-- Area under curve -->
+                                        <path d="M10,130 L10,105 L46,95 L83,110 L120,60 L156,80 L193,40 L230,85 L266,70 L303,115 L340,30 L376,55 L413,20 L450,45 L486,10 L486,130 Z" fill="url(#graphGlowGrad)" />
+                                        
+                                        <!-- Glowing Line Path -->
+                                        <path d="M10,105 L46,95 L83,110 L120,60 L156,80 L193,40 L230,85 L266,70 L303,115 L340,30 L376,55 L413,20 L450,45 L486,10" fill="none" stroke="url(#lineGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 4px var(--color-blue))" />
+                                        
+                                        <!-- Data Nodes (14 days) -->
+                                        <circle cx="10" cy="105" r="4.5" class="graph-node" data-day="1" data-commits="1" data-files="3" data-rag="4" fill="#07090e" stroke="var(--color-blue)" stroke-width="2" />
+                                        <circle cx="46" cy="95" r="4.5" class="graph-node" data-day="2" data-commits="2" data-files="4" data-rag="6" fill="#07090e" stroke="var(--color-blue)" stroke-width="2" />
+                                        <circle cx="83" cy="110" r="4.5" class="graph-node" data-day="3" data-commits="0" data-files="0" data-rag="6" fill="#07090e" stroke="var(--color-blue)" stroke-width="2" />
+                                        <circle cx="120" cy="60" r="4.5" class="graph-node" data-day="4" data-commits="5" data-files="12" data-rag="9" fill="#07090e" stroke="var(--color-blue)" stroke-width="2" />
+                                        <circle cx="156" cy="80" r="4.5" class="graph-node" data-day="5" data-commits="3" data-files="7" data-rag="11" fill="#07090e" stroke="var(--color-purple)" stroke-width="2" />
+                                        <circle cx="193" cy="40" r="4.5" class="graph-node" data-day="6" data-commits="7" data-files="18" data-rag="15" fill="#07090e" stroke="var(--color-purple)" stroke-width="2" />
+                                        <circle cx="230" cy="85" r="4.5" class="graph-node" data-day="7" data-commits="2" data-files="5" data-rag="15" fill="#07090e" stroke="var(--color-purple)" stroke-width="2" />
+                                        <circle cx="266" cy="70" r="4.5" class="graph-node" data-day="8" data-commits="4" data-files="9" data-rag="18" fill="#07090e" stroke="var(--color-purple)" stroke-width="2" />
+                                        <circle cx="303" cy="115" r="4.5" class="graph-node" data-day="9" data-commits="1" data-files="2" data-rag="18" fill="#07090e" stroke="var(--color-purple)" stroke-width="2" />
+                                        <circle cx="340" cy="30" r="4.5" class="graph-node" data-day="10" data-commits="8" data-files="22" data-rag="23" fill="#07090e" stroke="var(--color-purple)" stroke-width="2" />
+                                        <circle cx="376" cy="55" r="4.5" class="graph-node" data-day="11" data-commits="5" data-files="14" data-rag="23" fill="#07090e" stroke="var(--color-purple)" stroke-width="2" />
+                                        <circle cx="413" cy="20" r="4.5" class="graph-node" data-day="12" data-commits="9" data-files="26" data-rag="28" fill="#07090e" stroke="var(--color-green)" stroke-width="2" />
+                                        <circle cx="450" cy="45" r="4.5" class="graph-node" data-day="13" data-commits="4" data-files="11" data-rag="29" fill="#07090e" stroke="var(--color-green)" stroke-width="2" />
+                                        <circle cx="486" cy="10" r="4.5" class="graph-node" data-day="14" data-commits="11" data-files="34" data-rag="35" fill="#07090e" stroke="var(--color-green)" stroke-width="2" />
+                                    </svg>
+                                    <!-- Floating Tooltip inside graph bounds -->
+                                    <div id="graphTooltip" class="graph-tooltip" style="position: absolute; display: none; pointer-events: none; background: rgba(7,9,14,0.95); border: 1px solid var(--border-color); color: #fff; padding: 0.4rem 0.6rem; border-radius: 6px; font-family: var(--font-sans); font-size: 0.62rem; line-height: 1.35; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.5);"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="report-card" id="gapsChecklistCard" data-link-diagram="doctrine" data-link-spot="3">
+                            <div class="report-card-header">
+                                <h4>4. Resolved Gaps Checklist</h4>
+                                <span class="report-status warn" id="gapsStatusBadge">MEDIUM</span>
+                            </div>
+                            <div class="report-card-body">
+                                <p style="margin-bottom: 0.6rem; font-size: 0.72rem; color: var(--text-secondary);">Toggle live gap fixes below to update the verification strength dynamically:</p>
+                                <div class="gaps-checklist" style="display: flex; flex-direction: column; gap: 0.5rem; background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.03);">
+                                    <label class="gap-checkbox-label" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.7rem; color: var(--text-secondary); user-select: none;">
+                                        <input type="checkbox" id="chkGap1" style="cursor: pointer; accent-color: var(--color-blue);">
+                                        <span class="gap-text">Fix RAG demo <code>embed_query</code> method <span class="gap-value" style="color: var(--color-blue); font-weight: 700;">(+1.8%)</span></span>
+                                    </label>
+                                    <label class="gap-checkbox-label" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.7rem; color: var(--text-secondary); user-select: none;">
+                                        <input type="checkbox" id="chkGap2" style="cursor: pointer; accent-color: var(--color-purple);">
+                                        <span class="gap-text">Verify MiniMax API connector <span class="gap-value" style="color: var(--color-purple); font-weight: 700;">(+1.7%)</span></span>
+                                    </label>
+                                </div>
+                                <p class="gaps-summary-text" id="gapsSummaryText" style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.4;">Baseline: 2 gaps outstanding. Overall Verification: <strong>96.5%</strong>.</p>
+                            </div>
+                        </div>
+
+                        <!-- 📄 Compile and Download Action Drawer Card -->
+                        <div class="report-card" id="compilerActionCard" style="border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 1.5rem; padding-top: 1.2rem; background: transparent; border: none; box-shadow: none;">
+                            <div class="report-card-body" style="padding: 0;">
+                                <button id="btnCompileResume" class="btn-compile-resume" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: linear-gradient(135deg, var(--color-green), #059669); color: #022c22; font-family: var(--font-sans); font-size: 0.78rem; font-weight: 750; letter-spacing: 0.02em; padding: 0.7rem; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);">
+                                    📄 Compile & Download ATS Resume
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Drift Monitor -->
+                <div class="drift-monitor">
+                    <div class="monitor-header">
+                        <span>Live Verification Strength</span>
+                        <strong id="verificationRatio">98.2% Strict</strong>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-bar" id="verificationProgressBar" style="width: 98.2%;"></div>
+                    </div>
+                    <div class="monitor-footer">
+                        <span>3-Level Backup: <strong class="text-green">L1 Snap Active</strong></span>
+                    </div>
+                </div>
+            </aside>
+
+        </main>
+
+        <!-- LEGEND & TECHNICAL CAPABILITIES -->
+        <footer class="app-legend glassmorphic">
+            <div class="legend-intro">
+                <span class="kicker">Technical Capability</span>
+                <h2>Verifiable Engineering Ethics</h2>
+                <p>This interactive panel demonstrates the automated lifecycle of Zhane Grey's development workflow. By converting visual schematics into interactive nodes, hiring managers can trace and audit the exact rules, APIs, and pipelines that govern this system.</p>
+            </div>
+            <div class="legend-grid">
+                <div class="legend-cell">
+                    <span class="swatch swatch-blue"></span>
+                    <div class="cell-content">
+                        <strong>Evidence-First Ingestion</strong>
+                        <p>Automatically flags unverified or aspirational skills, keeping them off final ATS resumes.</p>
+                    </div>
+                </div>
+                <div class="legend-cell">
+                    <span class="swatch swatch-green"></span>
+                    <div class="cell-content">
+                        <strong>Secret Redaction Layer</strong>
+                        <p>Active code blocks parse and replace private keys, Supabase URLs, and cookie variables with generic tags.</p>
+                    </div>
+                </div>
+                <div class="legend-cell">
+                    <span class="swatch swatch-purple"></span>
+                    <div class="cell-content">
+                        <strong>Three-Level Backup Protocol</strong>
+                        <p>Protects source materials before and after compiles, generating SHA256 checksum tags in L1.</p>
+                    </div>
+                </div>
+                <div class="legend-cell">
+                    <span class="swatch swatch-gold"></span>
+                    <div class="cell-content">
+                        <strong>Multi-Agent Handoffs</strong>
+                        <p>Coordinates parallel runs of specialized RAG engines with standard verification and compile audits.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+
+    <!-- 1. DYNAMIC CODE PROOF DRAWER OVERLAY -->
+    <div class="code-drawer-overlay" id="codeDrawerOverlay"></div>
+    <div class="code-drawer" id="codeDrawer">
+        <div class="drawer-header">
+            <div class="drawer-meta">
+                <span class="drawer-tag" id="drawerFileTag">FILE PROOF</span>
+                <h3 id="drawerFileName">main.py</h3>
+            </div>
+            <button class="btn-close-drawer" id="btnCloseDrawer">&times;</button>
+        </div>
+        
+        <!-- Action buttons -->
+        <div class="drawer-actions" style="display: flex; flex-direction: column; gap: 0.6rem; padding: 0.8rem 1.5rem; background: rgba(0, 0, 0, 0.35); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+            <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                <span class="file-path-indicator" id="drawerFilePath">c:/Users/Zhane/.../main.py</span>
+                <button class="btn-copy-code" id="btnCopyCode" title="Copy to Clipboard">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Copy
+                </button>
+            </div>
+            <!-- QUICK SOURCE SWITCH TABS -->
+            <div class="drawer-source-tabs" style="display: flex; gap: 0.4rem; width: 100%; border-top: 1px solid rgba(255,255,255,0.03); padding-top: 0.5rem;">
+                <button class="drawer-tab active" data-source="ingest" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); color: var(--text-secondary); font-size: 0.65rem; padding: 0.25rem 0.6rem; border-radius: 4px; cursor: pointer; transition: all 0.2s;">main.py</button>
+                <button class="drawer-tab" data-source="rag" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); color: var(--text-secondary); font-size: 0.65rem; padding: 0.25rem 0.6rem; border-radius: 4px; cursor: pointer; transition: all 0.2s;">evals.py</button>
+                <button class="drawer-tab" data-source="registry" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); color: var(--text-secondary); font-size: 0.65rem; padding: 0.25rem 0.6rem; border-radius: 4px; cursor: pointer; transition: all 0.2s;">RalphplanProofRegistry.sol</button>
+            </div>
+        </div>
+        
+        <div class="drawer-body">
+            <pre class="drawer-pre"><code id="drawerCodeArea" class="language-py"></code></pre>
+        </div>
+    </div>
+
+    <!-- 2. RESUME COMPILER MODAL OVERLAY -->
+    <div class="compiler-modal-overlay" id="compilerModalOverlay">
+        <div class="compiler-modal glassmorphic">
+            <div class="compiler-modal-header">
+                <div class="pulse-ring green"></div>
+                <h3>Recruiter PDF Resume Compiler</h3>
+            </div>
+            <div class="compiler-modal-body">
+                <p style="font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 0.8rem; text-align: center;">
+                    Compiling ATS resume package with active, verified security scans and local evidence anchors.
+                </p>
+                
+                <!-- compiler progress bar -->
+                <div class="compiler-progress-container" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); padding: 0.6rem; border-radius: 6px; margin-bottom: 0.8rem;">
+                    <div class="compiler-progress-header" style="display: flex; justify-content: space-between; font-size: 0.65rem; font-family: var(--font-mono); color: var(--text-secondary); margin-bottom: 0.25rem;">
+                        <span id="compilerStepText">Initializing...</span>
+                        <span id="compilerPercentageText">0%</span>
+                    </div>
+                    <div class="progress-track" style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+                        <div class="progress-bar" id="compilerProgressBar" style="width: 0%; background: var(--color-green); transition: width 0.1s linear;"></div>
+                    </div>
+                </div>
+                
+                <!-- compilation console logs -->
+                <div class="compiler-console" id="compilerConsole">
+                    <div class="console-line system">[SYSTEM] Dynamic ATS Compiler initialized.</div>
+                </div>
+            </div>
+            <div class="compiler-modal-footer" style="display: flex; justify-content: flex-end; gap: 0.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.8rem; margin-top: 0.5rem;">
+                <button id="btnCancelCompile" class="btn-secondary" style="font-size: 0.7rem; padding: 0.4rem 0.8rem; border-radius: 4px; border: 1px solid var(--border-color); background: transparent; color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease;">Cancel</button>
+                <button id="btnDownloadResumeCompiled" class="btn-primary" disabled style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; padding: 0.4rem 0.8rem; border-radius: 4px; background: var(--color-green); color: #022c22; font-weight: 700; border: none; cursor: not-allowed; opacity: 0.5; transition: all 0.2s ease;">
+                    Download Resume
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
