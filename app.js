@@ -4,7 +4,7 @@
 const hotspotsData = {
     doctrine: [
         {
-            x: 50, y: 10,
+            x: 50, y: 8,
             title: "Raw Developer Activity Ingest",
             description: "Reads raw Git logs, commits, Solidity test results, and markdown diaries across 8 local project folders. SCRIBE detects what files changed in the last 24 hours.",
             logs: [
