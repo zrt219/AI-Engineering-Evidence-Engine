@@ -217,11 +217,14 @@ const btnRedactScan = document.getElementById("btnRedactScan");
 const rawCodeEl = document.getElementById("redactRawCode");
 const cleanCodeEl = document.getElementById("redactCleanCode");
 const scannerBar = document.getElementById("scannerBar");
+const btnLoopSim = document.getElementById("btnLoopSim");
 
 let currentSelectedDiagram = "doctrine";
 let simulationRunning = false;
 let loopModeActive = false;
 let loopTimeout = null;
+let activeTimeouts = [];
+let typingSimulationActive = false;
 let loopIteration = 0;
 let activeProofKey = null; // Track currently inspectable code block key
 
@@ -1010,6 +1013,7 @@ function escapeHTML(str) {
 function renderHotspots(diagramKey) {
     hotspotLayer.innerHTML = "";
     const hotspots = hotspotsData[diagramKey];
+    if (!hotspots) return;
     
     hotspots.forEach((spot, index) => {
         const hsElement = document.createElement("div");
@@ -1041,7 +1045,9 @@ function selectHotspot(diagramKey, index) {
     const activeSpot = hotspotLayer.querySelector(`.hotspot[data-index="${index}"]`);
     if (activeSpot) activeSpot.classList.add("active");
     
-    const spotInfo = hotspotsData[diagramKey][index];
+    const hotspots = hotspotsData[diagramKey];
+    if (!hotspots || !hotspots[index]) return;
+    const spotInfo = hotspots[index];
     
     // Update central details focus panel
     focusNodeTitle.textContent = spotInfo.title;
@@ -1064,7 +1070,7 @@ function selectHotspot(diagramKey, index) {
     if (diagramKey === "doctrine") {
         if (index === 0 || index === 1) cardIndexToHighlight = 0; // Verification Posture
         else if (index === 2) cardIndexToHighlight = 1; // Redaction Audit
-        else if (index === 3) cardIndexToHighlight = 3; // Resolved Gaps
+        else if (index === 3) cardIndexToHighlight = 4; // Resolved Gaps Checklist (Card 4)
     } else if (diagramKey === "workflow") {
         if (index === 1) cardIndexToHighlight = 2; // Three-Level Backups
     }
@@ -1181,6 +1187,13 @@ function switchDiagram(diagramKey) {
 // Tab Selector Switch Function
 function switchTab(target) {
     if (target === "terminal") {
+        if (contentTerminal && (contentTerminal.classList.contains("undocked") || contentTerminal.classList.contains("hero-snapped"))) {
+            const btnDockTerminal = document.getElementById("btnDockTerminal");
+            if (btnDockTerminal) {
+                btnDockTerminal.click();
+                return;
+            }
+        }
         tabTerminalBtn.classList.add("active");
         tabReportBtn.classList.remove("active");
         contentTerminal.classList.add("active");
@@ -1233,6 +1246,10 @@ function runRefreshCycle(isLoopMode = false) {
     terminalLogs.innerHTML = "";
     verificationRatio.textContent = "Calibrating...";
     verificationProgressBar.style.width = "10%";
+    
+    // Clear any active timeouts to prevent race conditions from overlapping loops
+    activeTimeouts.forEach(t => clearTimeout(t));
+    activeTimeouts.length = 0;
     
     // Randomizations for this specific run
     const scannedFiles = Math.floor(Math.random() * 36) + 100; // 100 to 135 files scanned
@@ -1322,7 +1339,7 @@ function runRefreshCycle(isLoopMode = false) {
     ].sort((a, b) => a.delay - b.delay); // Sort steps to maintain linear timestamps
     
     simulationSteps.forEach(step => {
-        setTimeout(() => {
+        const tid = setTimeout(() => {
             // Check if loop was deactivated mid-cycle
             if (isLoopMode && !loopModeActive) return;
             
@@ -1360,7 +1377,7 @@ function runRefreshCycle(isLoopMode = false) {
                 }
                 
                 // Automate tab focus reveal to show off the completed recruiter report!
-                setTimeout(() => {
+                const revealTid = setTimeout(() => {
                     if (isLoopMode && !loopModeActive) return;
                     
                     switchTab("report");
@@ -1371,17 +1388,19 @@ function runRefreshCycle(isLoopMode = false) {
                     // Animate/Highlight all report cards in a beautiful cascading sequence
                     const allCards = document.querySelectorAll(".report-card");
                     allCards.forEach((c, idx) => {
-                        setTimeout(() => {
+                        const cardTid = setTimeout(() => {
                             c.style.transform = "scale(1.02) translateX(3px)";
                             c.style.borderColor = "var(--color-purple)";
                             c.style.boxShadow = "0 0 15px rgba(139, 92, 246, 0.25)";
                             
-                            setTimeout(() => {
+                            const resetTid = setTimeout(() => {
                                 c.style.transform = "";
                                 c.style.borderColor = "";
                                 c.style.boxShadow = "";
                             }, 800);
+                            activeTimeouts.push(resetTid);
                         }, idx * 120);
+                        activeTimeouts.push(cardTid);
                     });
                     
                     // Schedule next loop iteration if active
@@ -1391,10 +1410,13 @@ function runRefreshCycle(isLoopMode = false) {
                                 runRefreshCycle(true);
                             }
                         }, 3000); // 3-second standby pause, total time = 11 seconds per loop
+                        activeTimeouts.push(loopTimeout);
                     }
                 }, 600);
+                activeTimeouts.push(revealTid);
             }
         }, step.delay);
+        activeTimeouts.push(tid);
     });
 }
 
@@ -1433,6 +1455,10 @@ function toggleLoopMode() {
             clearTimeout(loopTimeout);
             loopTimeout = null;
         }
+        
+        // Clear all scheduled active timeouts to prevent race conditions
+        activeTimeouts.forEach(t => clearTimeout(t));
+        activeTimeouts.length = 0;
         
         btnLoopSim.style.background = "linear-gradient(135deg, var(--color-purple) 0%, rgba(139, 92, 246, 0.45) 100%)";
         btnLoopSim.style.borderColor = "rgba(139, 92, 246, 0.3)";
@@ -1818,7 +1844,6 @@ document.addEventListener("DOMContentLoaded", () => {
     btnRefreshSim.addEventListener("click", runRefreshSimulation);
     
     // Wire Loop Mode Simulator Toggle Button
-    const btnLoopSim = document.getElementById("btnLoopSim");
     if (btnLoopSim) {
         btnLoopSim.addEventListener("click", toggleLoopMode);
     }
@@ -2079,8 +2104,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // High-tech character-by-character typing simulator helper
     function simulateCommandTyping(cmdText) {
         const inputPrompt = document.getElementById("terminalPromptInput");
-        if (!inputPrompt || simulationRunning) return;
+        if (typingSimulationActive || !inputPrompt || simulationRunning) return;
 
+        typingSimulationActive = true;
         inputPrompt.disabled = true;
         inputPrompt.value = "";
         inputPrompt.focus();
@@ -2093,6 +2119,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 clearInterval(typingInterval);
                 inputPrompt.disabled = false;
+                typingSimulationActive = false;
                 
                 // Exquisite visual micro-pause before running
                 setTimeout(() => {
@@ -2215,6 +2242,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (terminalHeader && terminalContainer) {
         terminalHeader.addEventListener("mousedown", (e) => {
             if (e.target.closest('.btn-dock')) return; 
+            e.preventDefault(); // Prevent text selection/drag interference
             
             isDraggingTerminal = true;
             dragStartX = e.clientX;
@@ -2232,16 +2260,26 @@ document.addEventListener("DOMContentLoaded", () => {
             // Move to body to avoid backdrop-filter containing block issues
             document.body.appendChild(terminalContainer);
             
-            terminalContainer.style.left = rect.left + "px";
-            terminalContainer.style.top = rect.top + "px";
-            termInitialX = rect.left;
-            termInitialY = rect.top;
-            
             if (terminalContainer.classList.contains("hero-snapped")) {
                 terminalContainer.classList.remove("hero-snapped");
                 terminalContainer.classList.add("undocked");
                 terminalContainer.style.width = "450px";
                 terminalContainer.style.height = "450px";
+                
+                // Position centered under the cursor to prevent sudden layout jumps
+                const newLeft = e.clientX - 225;
+                const newTop = e.clientY - 20;
+                terminalContainer.style.left = newLeft + "px";
+                terminalContainer.style.top = newTop + "px";
+                termInitialX = newLeft;
+                termInitialY = newTop;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+            } else {
+                terminalContainer.style.left = rect.left + "px";
+                terminalContainer.style.top = rect.top + "px";
+                termInitialX = rect.left;
+                termInitialY = rect.top;
             }
 
             terminalContainer.classList.add("dragging");
