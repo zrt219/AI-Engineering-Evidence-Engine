@@ -1064,15 +1064,19 @@ function renderHotspots(diagramKey) {
     hotspotLayer.innerHTML = "";
     const hotspots = hotspotsData[diagramKey];
     if (!hotspots) return;
+    const useInlineDiagramNodes = diagramKey === "doctrine";
 
     const connectorSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     connectorSvg.classList.add("hotspot-connectors");
     connectorSvg.setAttribute("viewBox", "0 0 100 100");
     connectorSvg.setAttribute("preserveAspectRatio", "none");
-    hotspotLayer.appendChild(connectorSvg);
+    if (!useInlineDiagramNodes) {
+        hotspotLayer.appendChild(connectorSvg);
+    }
     
     hotspots.forEach((spot, index) => {
         const railX = 2.5;
+        const hotspotX = useInlineDiagramNodes ? spot.x : railX;
         const label = spot.title
             .replace(/^Agent \d+:\s*/, "")
             .replace(/\s*\(.+?\)\s*/g, "")
@@ -1080,22 +1084,25 @@ function renderHotspots(diagramKey) {
             .slice(0, 3)
             .join(" ");
 
-        const connector = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        connector.classList.add("hotspot-connector");
-        if (index === 0) connector.classList.add("active");
-        connector.setAttribute("x1", String(railX + 2));
-        connector.setAttribute("y1", String(spot.y));
-        connector.setAttribute("x2", String(spot.x));
-        connector.setAttribute("y2", String(spot.y));
-        connector.setAttribute("data-index", index);
-        connectorSvg.appendChild(connector);
+        if (!useInlineDiagramNodes) {
+            const connector = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            connector.classList.add("hotspot-connector");
+            if (index === 0) connector.classList.add("active");
+            connector.setAttribute("x1", String(railX + 2));
+            connector.setAttribute("y1", String(spot.y));
+            connector.setAttribute("x2", String(spot.x));
+            connector.setAttribute("y2", String(spot.y));
+            connector.setAttribute("data-index", index);
+            connectorSvg.appendChild(connector);
+        }
 
         const hsElement = document.createElement("button");
         hsElement.type = "button";
         hsElement.classList.add("hotspot");
+        if (useInlineDiagramNodes) hsElement.classList.add("inline-node");
         if (index === 0) hsElement.classList.add("active"); // default active spot
         
-        hsElement.style.left = `${railX}%`;
+        hsElement.style.left = `${hotspotX}%`;
         hsElement.style.top = `${spot.y}%`;
         hsElement.setAttribute("data-index", index);
         hsElement.setAttribute("aria-label", `Focus ${spot.title}`);
@@ -2368,7 +2375,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const terminalHeader = document.getElementById("terminalHeader");
     const visualizerPanel = document.querySelector(".stage-panel");
     const btnDockTerminal = document.getElementById("btnDockTerminal");
-    const tabReport = document.getElementById("tab-report");
     
     let isDraggingTerminal = false;
     let dragStartX = 0;
@@ -2389,8 +2395,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!terminalContainer.classList.contains("undocked") && !terminalContainer.classList.contains("hero-snapped")) {
                 terminalContainer.classList.add("undocked");
-                
-                if (tabReport) tabReport.click();
+                terminalContainer.classList.add("active");
+                if (tabTerminalBtn) tabTerminalBtn.classList.add("active");
+                if (tabReportBtn) tabReportBtn.classList.remove("active");
                 if (btnDockTerminal) btnDockTerminal.style.display = "block";
             }
             
@@ -2400,6 +2407,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (terminalContainer.classList.contains("hero-snapped")) {
                 terminalContainer.classList.remove("hero-snapped");
                 terminalContainer.classList.add("undocked");
+                terminalContainer.classList.add("active");
                 terminalContainer.style.width = "450px";
                 terminalContainer.style.height = "450px";
                 
@@ -2449,10 +2457,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 visualizerPanel.classList.remove("drag-over");
                 terminalContainer.classList.add("hero-snapped");
                 terminalContainer.classList.remove("undocked");
+                terminalContainer.classList.add("active");
                 terminalContainer.style.left = "";
                 terminalContainer.style.top = "";
                 terminalContainer.style.width = "";
-                // Append to visualizerPanel to snap to bottom inside it
+                terminalContainer.style.height = "";
+                if (btnDockTerminal) btnDockTerminal.style.display = "block";
+                // Append as an inline tray so the terminal does not cover the diagram.
                 visualizerPanel.appendChild(terminalContainer);
             }
         });
