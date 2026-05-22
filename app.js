@@ -1,4 +1,4 @@
-// INTERACTIVE INTERFACE LOGIC FOR THE SYSTEMS DASHBOARD
+﻿// INTERACTIVE INTERFACE LOGIC FOR THE SYSTEMS DASHBOARD
 
 // 1. Diagram metadata and interactive hotspots definitions
 const hotspotsData = {
@@ -21,22 +21,22 @@ const hotspotsData = {
         {
             x: 32, y: 43,
             title: "RAG Verification & Ingress Gate",
-            description: "Programmatic verification gate. Validates if codebase changes directly prove professional skills. Graded claims ensure the resume stays 100% accurate.",
+            description: "Programmatic verification gate. Validates whether codebase changes directly support professional claims. Graded claims keep resume wording evidence-bound.",
             logs: [
                 "[ATLAS] Re-evaluating verified metrics from live codebase...",
                 "[ATLAS] Comparing Foundry smart contract tests against resume bullets...",
                 "[ATLAS] Verified passing test suite in test_ether.sol. Confidence: STRONG."
             ],
             metrics: {
-                "Verification Pass": "100%",
+                "Verification Pass": "Demo pass",
                 "Claims Queue": "14 Approved",
                 "Confidence Grade": "STRONG"
             }
         },
         {
             x: 50, y: 43,
-            title: "Strict Secret Redaction Gate",
-            description: "An automated security filter scanning all code blocks and logs. Replaces any API keys, Supabase URLs, JWT cookies, and credentials with generic token tags.",
+            title: "Demo Redaction Pattern",
+            description: "A sample redaction pattern showing how API keys, environment variables, cookies, and user secrets should be removed before documents are updated.",
             logs: [
                 "[ATLAS] Checking secret redaction patterns on raw logs...",
                 "[ATLAS] Found active openrouter token at L14 in config.json. Redacting...",
@@ -44,7 +44,7 @@ const hotspotsData = {
             ],
             metrics: {
                 "Secrets Redacted": "2 Tokens",
-                "Security Gaps": "0 Leaks",
+                "Sample Leak State": "No raw sample leak shown",
                 "Posture State": "Governed"
             }
         },
@@ -83,7 +83,7 @@ const hotspotsData = {
         {
             x: 50, y: 50,
             title: "Agent 2: RAG-ATLAS (Verification & QA)",
-            description: "The truth guardian. Compares today's changes against existing resume documents, runs QA rules, grades claim confidence, and blocks resume inflation.",
+            description: "Claim review agent. Compares today's changes against existing resume documents, runs QA rules, grades claim confidence, and blocks resume inflation.",
             logs: [
                 "[ATLAS] Initiating QA validation gates...",
                 "[ATLAS] Re-evaluating developer stats... Comparing live contract counts.",
@@ -92,13 +92,13 @@ const hotspotsData = {
             metrics: {
                 "Claims Kept": "14 Rules",
                 "Claims Downgraded": "1 Gaps",
-                "QA Integrity": "98.2% Strict"
+                "QA Posture": "Demo review"
             }
         },
         {
             x: 50, y: 78,
-            title: "Agent 3: RAG-FORGE (Artifact Blacksmith)",
-            description: "The writer and exporter. Merges graded claims into canonical Markdown source files and compiles them into Word, PDF, and ATS-ready formats.",
+            title: "Agent 3: RAG-FORGE (Artifact Builder)",
+            description: "Artifact builder and export step. Merges graded claims into canonical Markdown source files before Word, PDF, and ATS-ready export attempts.",
             logs: [
                 "[FORGE] Initiating document builds...",
                 "[FORGE] Merged claim ledger. Mutating ATS Resume and Codex Diary...",
@@ -161,7 +161,7 @@ const hotspotsData = {
         {
             x: 50, y: 68,
             title: "Document Exports & Pandoc Compiling",
-            description: "Compiles canonical source files. Directly compiles Markdown to DOCX and XeLaTeX PDF formats. Bypasses crashed headless instances by retaining prior exports.",
+            description: "Models the documented export step for canonical Markdown, DOCX, and PDF artifacts while preserving prior exports when regeneration fails.",
             logs: [
                 "[FORGE] Exporting deliverables... Generating Zhane_Grey_AI_Engineer_ATS_Resume_ATS_Text.txt.",
                 "[FORGE] Pandoc direct Markdown to Word conversion complete.",
@@ -176,7 +176,7 @@ const hotspotsData = {
         {
             x: 50, y: 90,
             title: "Portfolio Sync & QA Gates",
-            description: "Synchronizes live developer stats directly into the React codebase. Runs final QA gates verifying that all secrets are redacted and restore instructions are deployed.",
+            description: "Shows how documented developer stats can be synced into a public portfolio surface after QA gates, redaction checks, and restore instructions.",
             logs: [
                 "[FORGE] Syncing live metrics into zrt-portfolio/src/data/codexStats.ts...",
                 "[SYSTEM] Refresh audit complete. Restoring system state...",
@@ -203,7 +203,6 @@ const terminalLogs = document.getElementById("terminalLogs");
 const sideTerminalLogs = document.getElementById("sideTerminalLogs");
 const sideTerminalPromptInput = document.getElementById("sideTerminalPromptInput");
 const ambientCodeField = document.getElementById("ambientCodeField");
-const ambientCursorGlyph = document.getElementById("ambientCursorGlyph");
 const btnRefreshSim = document.getElementById("btnRefreshSim");
 const verificationRatio = document.getElementById("verificationRatio");
 const verificationProgressBar = document.getElementById("verificationProgressBar");
@@ -343,19 +342,19 @@ const randomDeltas = [
 // Redaction Live Simulator Database
 const redactionDatabase = {
     stripe: {
-        raw: 'stripe_key = "sk_live_51NjU45k2Jfs82Skdjf9"',
+        raw: 'stripe_key = "DEMO_SK_LIVE_REDACTION_SAMPLE"',
         clean: 'stripe_key = "[REDACTED_SECRET]"'
     },
     supabase: {
-        raw: 'db_url = "postgresql://postgres:supa-secret-pass-2026@db.supabase.co:5432/prod"',
-        clean: 'db_url = "postgresql://postgres:[REDACTED_SECRET]@db.supabase.co:5432/prod"'
+        raw: 'db_url = "DEMO_POSTGRES_URL_WITH_PASSWORD_SAMPLE"',
+        clean: 'db_url = "[REDACTED_SECRET]"'
     },
     cookie: {
-        raw: 'Cookie: session_id=jwt.header.eyJ1c2VySWQiOiJ6aGFuZSJ9.signature; admin=true',
+        raw: 'Cookie: session_id=DEMO_JWT_SESSION_SAMPLE; admin=true',
         clean: 'Cookie: session_id=[REDACTED_TOKEN]; admin=true'
     },
-    mnemonic: {
-        raw: 'phrase = "apple banana cherry dog elephant fox grape horse iron juice key lemon"',
+    seedPhrase: {
+        raw: 'phrase = "DEMO TWELVE WORD WALLET SEED SAMPLE ONLY"',
         clean: 'phrase = "[REDACTED_PERSONAL_IDENTIFIER]"'
     }
 };
@@ -1034,6 +1033,7 @@ function openCodeDrawer(proofKey) {
         document.querySelectorAll(".drawer-source-tabs .drawer-tab").forEach(tab => {
             const matches = tab.getAttribute("data-source") === proofKey;
             tab.classList.toggle("active", matches);
+            tab.setAttribute("aria-selected", matches ? "true" : "false");
             if (matches) {
                 tab.style.borderColor = "var(--color-blue)";
                 tab.style.color = "var(--text-primary)";
@@ -1290,12 +1290,6 @@ function initAmbientEvidenceField() {
             document.documentElement.style.setProperty("--cursor-x", `${event.clientX}px`);
             document.documentElement.style.setProperty("--cursor-y", `${event.clientY}px`);
             document.body.classList.add("ambient-pointer-active");
-
-            if (ambientCursorGlyph) {
-                const errorGlyphs = ["エラー", "警告", "異常", "復旧"];
-                const index = Math.abs(Math.floor((event.clientX + event.clientY) / 140)) % errorGlyphs.length;
-                ambientCursorGlyph.textContent = errorGlyphs[index];
-            }
 
             clearTimeout(ambientPointerTimeout);
             ambientPointerTimeout = setTimeout(() => {
@@ -1554,7 +1548,7 @@ function runRefreshCycle(isLoopMode = false) {
         },
         {
             delay: 2000,
-            log: `[SYSTEM] Level 2 Immutable ZIP generated. size: ${(Math.random() * 0.8 + 1.8).toFixed(1)} MB. L3 Portable sanitized bundle deployed.`,
+            log: `[SYSTEM] Level 2 Immutable ZIP generated. size: ${(Math.random() * 0.8 + 1.8).toFixed(1)} MB. L3 portable sanitized bundle prepared.`,
             style: "success",
             progress: "45%"
         },
@@ -1580,31 +1574,31 @@ function runRefreshCycle(isLoopMode = false) {
             delay: 4800,
             log: downgradedClaims > 0
                 ? `[ATLAS] WARNING: HashEmbeddingFunction lacks embed_query. Claim qualified to MEDIUM. Gaps logged in missing-proof.md.`
-                : `[ATLAS] All active workspace claims matched to local test evidence. Integrity: 100% verified.`,
+                : `[ATLAS] Simulated claim pass complete. Review ledger remains the source of truth.`,
             style: downgradedClaims > 0 ? "warning" : "success",
             progress: "82%"
         },
         {
             delay: 5500,
-            log: `[ATLAS] Security audit passed. Sanitized ${redactedKeys} local tokens, credentials, and Supabase database URLs successfully.`,
+            log: `[ATLAS] Demo redaction pass completed. Sanitized ${redactedKeys} sample tokens, credentials, and database URL placeholders.`,
             style: "success",
             progress: "88%"
         },
         {
             delay: 6400,
-            log: `[FORGE] Mutating Markdown sources. Compiling ATS Resume, Codex Diary, and XeLaTeX PDF exports...`,
+            log: `[FORGE] Previewing document-update steps for ATS resume, Codex diary, and PDF export artifacts...`,
             style: "info",
             progress: "94%"
         },
         {
             delay: 7200,
-            log: `[FORGE] Recompilation successful. DOCX/PDF generated. Syncing zrt-portfolio statistics...`,
+            log: `[FORGE] Export generation represented in demo flow. Previewing portfolio statistic sync...`,
             style: "success",
             progress: `${strictPct}%`
         },
         {
             delay: 8000,
-            log: `[SYSTEM] Refresher success. Deliverables compiled. System entering standby.`,
+            log: `[SYSTEM] Refresher demo complete. Review the evidence ledger before using stronger claims.`,
             style: "system",
             progress: `${strictPct}%`
         }
@@ -1702,13 +1696,13 @@ function updateRecruiterReportUI(dateStr, timeStr, claimsAnalyzed, keepQueue, do
     // 1. Verification Posture Card
     const cardPosture = document.querySelector(".report-card[data-link-spot='1'] .report-card-body p");
     if (cardPosture) {
-        cardPosture.innerHTML = `Total codebase claims analyzed: <strong>${claimsAnalyzed}</strong>. Keep queue: <strong>${keepQueue}</strong>. Downgraded/Removed: <strong>${downgradedClaims}</strong>.`;
+        cardPosture.innerHTML = `Demo snapshot claims analyzed: <strong>${claimsAnalyzed}</strong>. Keep queue: <strong>${keepQueue}</strong>. Downgraded/Removed: <strong>${downgradedClaims}</strong>.`;
     }
     
     // 2. Redaction Audit Card
     const cardRedact = document.querySelector("#redactionAuditorCard .report-card-body p");
     if (cardRedact) {
-        cardRedact.innerHTML = `Credential leaks: <strong>0</strong>. Detected keys: <strong>${redactedKeys}</strong> (Redacted successfully).`;
+        cardRedact.innerHTML = `Demo redaction scan: <strong>0 raw sample leaks</strong>. Detected placeholders: <strong>${redactedKeys}</strong> (redacted successfully).`;
     }
     
     // 3. Three-Level Backups Card
@@ -1736,7 +1730,7 @@ function toggleLoopMode() {
         btnLoopSim.style.borderColor = "rgba(139, 92, 246, 0.3)";
         btnLoopSim.style.boxShadow = "0 4px 15px rgba(139, 92, 246, 0.15)";
         btnLoopSim.querySelector(".btn-text").textContent = "Start Loop Mode";
-        btnLoopSim.querySelector(".btn-icon").textContent = "🔄";
+        btnLoopSim.querySelector(".btn-icon").textContent = "LOOP";
         
         systemState.textContent = "Online / Idle";
         systemState.classList.add("pulse-dot");
@@ -1753,6 +1747,11 @@ function toggleLoopMode() {
         
         appendTerminalLines(["[SYSTEM] Loop Mode deactivated. System entered Idle standby state."], "system");
     } else {
+        if (simulationRunning) {
+            appendTerminalLines(["[SYSTEM] Loop Mode queued request blocked: wait for the active refresh to finish or stop the current run first."], "warning");
+            return;
+        }
+
         // Starting Loop Mode
         loopModeActive = true;
         loopIteration = 0;
@@ -1761,7 +1760,7 @@ function toggleLoopMode() {
         btnLoopSim.style.borderColor = "rgba(239, 68, 68, 0.5)";
         btnLoopSim.style.boxShadow = "0 4px 15px rgba(239, 68, 68, 0.3)";
         btnLoopSim.querySelector(".btn-text").textContent = "Stop Loop Mode";
-        btnLoopSim.querySelector(".btn-icon").textContent = "⏹️";
+        btnLoopSim.querySelector(".btn-icon").textContent = "STOP";
         
         btnRefreshSim.disabled = true;
         btnRefreshSim.style.opacity = "0.6";
@@ -1801,16 +1800,16 @@ function updateGapsIntegrity() {
     if (gapsCount === 2) {
         gapsStatusBadge.textContent = "MEDIUM";
         gapsStatusBadge.className = "report-status warn";
-        gapsSummaryText.innerHTML = `Baseline: 2 gaps outstanding. Overall Verification: <strong>96.5%</strong>.`;
+        gapsSummaryText.innerHTML = `Demo baseline: 2 gaps still require source evidence. Review posture preview: <strong>96.5%</strong>.`;
     } else if (gapsCount === 1) {
-        gapsStatusBadge.textContent = "STRONG";
-        gapsStatusBadge.className = "report-status pass";
-        gapsSummaryText.innerHTML = `Progress: 1 gap outstanding. Overall Verification: <strong>${finalScore}%</strong>.`;
+        gapsStatusBadge.textContent = "REVIEW";
+        gapsStatusBadge.className = "report-status warn";
+        gapsSummaryText.innerHTML = `Demo preview: 1 gap marked for follow-up. Evidence ledger still required before resume wording changes. Preview score: <strong>${finalScore}%</strong>.`;
     } else {
-        gapsStatusBadge.textContent = "SECURE";
-        gapsStatusBadge.className = "report-status pass";
+        gapsStatusBadge.textContent = "REVIEW";
+        gapsStatusBadge.className = "report-status warn";
         gapsStatusBadge.style.borderColor = "var(--color-green)";
-        gapsSummaryText.innerHTML = `System audit: 0 gaps outstanding. <strong>100.0% Strict Integrity</strong> achieved!`;
+        gapsSummaryText.innerHTML = `Demo preview: both gaps marked for follow-up review. This is not proof of resolution; verify source evidence first. Preview score: <strong>${finalScore}%</strong>.`;
     }
 
     // Update Overall Drift Monitor at bottom-right
@@ -2050,6 +2049,8 @@ function handleTerminalCommand(cmdText, context = {}) {
     } else if (cleanCmd === "refresh") {
         if (simulationRunning) {
             appendTerminalLines(["[ERROR] Refresher execution is already busy!"], "error");
+        } else if (loopModeActive) {
+            appendTerminalLines(["[SYSTEM] Single refresh blocked while Loop Mode is active. Use 'stop loop' first."], "warning");
         } else {
             runRefreshSimulation();
         }
@@ -2092,34 +2093,24 @@ function compileResumeText(gap1Resolved, gap2Resolved) {
     const hashPart1 = generateRandomHash().toUpperCase();
     const hashPart2 = generateRandomHash().toUpperCase();
     const integrityTag = `${hashPart1}${hashPart2}`;
-    
+
+    const operatorNotes = [];
     if (gap1Resolved) {
-        text = text.replace(
-            "while one atlas action path still has a logged backend error.",
-            "while all atlas action paths are verified error-free and fully test-covered in main.py & evals.py."
-        );
-        text = text.replace(
-            "FastAPI/LangGraph/MCP RAG work",
-            "FastAPI/LangGraph/MCP RAG work (100% verified via ingest/eval endpoints)"
-        );
+        operatorNotes.push("Operator marked the embed_query gap for follow-up review in the demo checklist; verify current backend evidence before using stronger resume wording.");
     }
     
     if (gap2Resolved) {
-        text = text.replace(
-            "OpenRouter LLM routing",
-            "OpenRouter LLM routing, verified MiniMax Model integration"
-        );
-        text = text.replace(
-            "Weaviate, Neo4j, Chroma-style vector retrieval, MCP",
-            "Weaviate, Neo4j, Chroma-style vector retrieval, MCP, MiniMax API Provider Core"
-        );
+        operatorNotes.push("Operator marked the MiniMax connector for follow-up review in the demo checklist; keep MiniMax out of resume bullets until executable provider code is directly verified.");
     }
     
     text += `\n\n========================================================================\n`;
     text += `ZHANE GREY EVIDENCE PIPELINE INTEGRITY SEAL\n`;
-    text += `Verification Posture: ${gap1Resolved && gap2Resolved ? "STRICT / 100.0% SECURE" : "GOVERNED / 98.2% STRICT"}\n`;
+    text += `Verification Posture: GOVERNED / DEMO CHECKLIST REVIEW\n`;
     text += `Integrity SHA256 Code: sha256:${integrityTag.toLowerCase()}\n`;
-    text += `Status: PASSING (Direct local codebase proof anchors validated)\n`;
+    text += `Status: DEMO EXPORT (claims remain bound to the latest daily evidence report)\n`;
+    if (operatorNotes.length) {
+        text += `Operator Checklist Notes:\n- ${operatorNotes.join("\n- ")}\n`;
+    }
     text += `Timestamp: ${new Date().toISOString()}\n`;
     text += `========================================================================\n`;
     
@@ -2176,8 +2167,8 @@ function openCompilerModal() {
                 stepName: "Analyzing posture adjustments...",
                 logs: [
                     "[ATLAS] Checking checked posture requirements...",
-                    gap1 ? "[ATLAS] Posture Adjustment: Gap 1 (embed_query) marked RESOLVED. Rewriting RAG bullets..." : "[ATLAS] Posture Adjustment: Gap 1 (embed_query) left in default standby.",
-                    gap2 ? "[ATLAS] Posture Adjustment: Gap 2 (MiniMax connector) marked RESOLVED. Injecting skills..." : "[ATLAS] Posture Adjustment: Gap 2 (MiniMax connector) left in default standby."
+                    gap1 ? "[ATLAS] Demo checklist note: Gap 1 (embed_query) marked for follow-up review. Resume wording unchanged." : "[ATLAS] Gap 1 (embed_query) left in default standby.",
+                    gap2 ? "[ATLAS] Demo checklist note: Gap 2 (MiniMax connector) marked for evidence review. Resume wording unchanged." : "[ATLAS] Gap 2 (MiniMax connector) left in default standby."
                 ]
             },
             {
@@ -2188,7 +2179,7 @@ function openCompilerModal() {
                     "[SCRIBE] verified zrt-portfolio/contracts/RalphplanProofRegistry.sol",
                     "[SCRIBE] verified ai-agent-rag-demo/src/agent_demo/main.py",
                     "[SCRIBE] verified ai-agent-rag-demo/src/agent_demo/evals.py",
-                    "[ATLAS] Verification success. Posture integrity verified."
+                    "[ATLAS] Demo preview complete. Final claims remain bound to the daily evidence report."
                 ]
             },
             {
@@ -2218,7 +2209,7 @@ function openCompilerModal() {
                     if (currentCompileProgress === activeStage.progressLimit - 15) {
                         activeStage.logs.forEach(log => {
                             let styleClass = "active";
-                            if (log.includes("RESOLVED") || log.includes("success") || log.includes("SUCCESS")) {
+                            if (log.includes("marked for follow-up") || log.includes("success") || log.includes("SUCCESS")) {
                                 styleClass = "success";
                             } else if (log.includes("Loading") || log.includes("Checking")) {
                                 styleClass = "info";
@@ -2242,7 +2233,7 @@ function openCompilerModal() {
                 btnDownload.style.opacity = "1";
                 btnDownload.style.cursor = "pointer";
                 
-                appendTerminalLines(["[SYSTEM] Recruiter ATS Resume compiled dynamically. Ready for download."], "success");
+                appendTerminalLines(["[SYSTEM] ATS text preview built. Final resume claims remain bound to evidence."], "success");
             }
         }, 35); // Stagger interval (3.5 seconds total runtime)
     }
@@ -2389,13 +2380,13 @@ document.addEventListener("DOMContentLoaded", () => {
         chk1.addEventListener("change", () => {
             updateGapsIntegrity();
             appendTerminalLines([
-                `[ATLAS] Recruiter audited Gap 1 (RAG embed_query). Posture score updated.`
+                `[ATLAS] Operator marked Gap 1 (RAG embed_query) for evidence review. Posture preview updated.`
             ], "success");
         });
         chk2.addEventListener("change", () => {
             updateGapsIntegrity();
             appendTerminalLines([
-                `[ATLAS] Recruiter audited Gap 2 (MiniMax connector). Posture score updated.`
+                `[ATLAS] Operator marked Gap 2 (MiniMax connector) for evidence review. Posture preview updated.`
             ], "success");
         });
     }
@@ -2419,19 +2410,24 @@ document.addEventListener("DOMContentLoaded", () => {
             
             navigator.clipboard.writeText(data.code).then(() => {
                 const originalHTML = btnCopyCode.innerHTML;
-                btnCopyCode.innerHTML = "✓ Copied";
+                const copyStatus = document.getElementById("copyStatus");
+                btnCopyCode.innerHTML = "Copied";
                 btnCopyCode.style.borderColor = "var(--color-green)";
                 btnCopyCode.style.color = "var(--color-green)";
-                
+                if (copyStatus) copyStatus.textContent = `Copied ${data.name} evidence excerpt.`;
+
                 appendTerminalLines([`[SYSTEM] Code block successfully copied to clipboard: ${data.name}`], "success");
-                
+
                 setTimeout(() => {
                     btnCopyCode.innerHTML = originalHTML;
                     btnCopyCode.style.borderColor = "";
                     btnCopyCode.style.color = "";
+                    if (copyStatus) copyStatus.textContent = "";
                 }, 1500);
             }).catch(err => {
                 console.error("Clipboard copy failed: ", err);
+                const copyStatus = document.getElementById("copyStatus");
+                if (copyStatus) copyStatus.textContent = "Copy failed. Use the visible code excerpt instead.";
                 appendTerminalLines([`[SYSTEM] ERROR: Failed to copy code block to clipboard.`], "error");
             });
         });
@@ -2459,9 +2455,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 graphTooltip.innerHTML = `
                     <strong>Day ${day} (Refresher Active)</strong>
-                    • Status: ${commitStr}<br/>
-                    • Files Scanned: ${files} changed<br/>
-                    • RAG Evidence: ${rag} verified indexes
+                    - Status: ${commitStr}<br/>
+                    - Files Scanned: ${files} changed<br/>
+                    - RAG Evidence: ${rag} verified indexes
                 `;
                 graphTooltip.style.display = "block";
             });
@@ -2495,7 +2491,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnCancelCompile) {
         btnCancelCompile.addEventListener("click", () => {
             closeCompilerModal();
-            appendTerminalLines(["[SYSTEM] Recruiter ATS Resume compiler run aborted by operator."], "warning");
+            appendTerminalLines(["[SYSTEM] ATS text preview run aborted by operator."], "warning");
         });
     }
 
@@ -2504,7 +2500,7 @@ document.addEventListener("DOMContentLoaded", () => {
         compilerOverlay.addEventListener("click", (e) => {
             if (e.target === compilerOverlay) {
                 closeCompilerModal();
-                appendTerminalLines(["[SYSTEM] Recruiter ATS Resume compiler run aborted by operator."], "warning");
+                appendTerminalLines(["[SYSTEM] ATS text preview run aborted by operator."], "warning");
             }
         });
     }

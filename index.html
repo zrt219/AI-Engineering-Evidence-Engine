@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,17 +21,16 @@
         <div class="ambient-code-lines" id="ambientCodeField" aria-hidden="true">
             <span class="ambient-line">evidence.index.scan()</span>
             <span class="ambient-line">claim.grade = STRONG</span>
-            <span class="ambient-line">検証中 // atlas.verify.claim()</span>
+            <span class="ambient-line">atlas.verify.claim()</span>
             <span class="ambient-line">redact("[REDACTED_SECRET]")</span>
             <span class="ambient-line">forge.export("ATS", "PDF", "DOCX")</span>
-            <span class="ambient-line">エラー隔離 // error.quarantine()</span>
+            <span class="ambient-line">error.quarantine()</span>
             <span class="ambient-line">backup.L1.snapshot.active</span>
             <span class="ambient-line">scribe.delta.commit_stream</span>
-            <span class="ambient-line">秘密を伏せる // redact.secrets()</span>
+            <span class="ambient-line">redact.secrets()</span>
             <span class="ambient-line">atlas.block_unsupported_claim()</span>
             <span class="ambient-line">restore.path.verify_sha256()</span>
-            <span class="ambient-line">警告: proof_gap.detected()</span>
-            <span class="ambient-cursor-glyph" id="ambientCursorGlyph">エラー</span>
+            <span class="ambient-line">proof_gap.detected()</span>
         </div>
     </div>
 
@@ -177,10 +176,10 @@
                 <div class="utility-card">
                     <div class="kicker">Workspace Scope</div>
                     <div class="directory-list">
-                        <div class="dir-item"><span>📁 AI_ENGINEERING_ROOT</span><span class="pill-sm">MD / DOCX</span></div>
-                        <div class="dir-item"><span>📁 PORTFOLIO_ROOT</span><span class="pill-sm">React/TS</span></div>
-                        <div class="dir-item"><span>📁 AI_RAG_DEMO_ROOT</span><span class="pill-sm">FastAPI</span></div>
-                        <div class="dir-item"><span>📁 BLOCKCHAIN_CORPUS_ROOT</span><span class="pill-sm">Foundry</span></div>
+                        <div class="dir-item"><span><span class="dir-icon" aria-hidden="true">DIR</span> AI_ENGINEERING_ROOT</span><span class="tech-badge tech-docs">Markdown + DOCX</span></div>
+                        <div class="dir-item"><span><span class="dir-icon" aria-hidden="true">WEB</span> PORTFOLIO_ROOT</span><span class="tech-badge tech-react">React + TypeScript</span></div>
+                        <div class="dir-item"><span><span class="dir-icon" aria-hidden="true">API</span> AI_RAG_DEMO_ROOT</span><span class="tech-badge tech-api">FastAPI</span></div>
+                        <div class="dir-item"><span><span class="dir-icon" aria-hidden="true">EVM</span> BLOCKCHAIN_CORPUS_ROOT</span><span class="tech-badge tech-foundry">Foundry</span></div>
                     </div>
                 </div>
             </aside>
@@ -236,7 +235,7 @@
                         </div>
                         <!-- PULSING ACTION BUTTON FOR THE SOURCE DRAWER -->
                         <button id="btnInspectCodeProof" class="btn-inspect-proof" style="display: flex; align-items: center; gap: 0.4rem; background: rgba(59, 130, 246, 0.12); color: var(--color-blue); border: 1px solid rgba(59, 130, 246, 0.35); padding: 0.45rem 0.9rem; border-radius: 6px; font-family: var(--font-sans); font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 12px rgba(59, 130, 246, 0.15);">
-                            🔍 View Evidence Excerpt
+                            View Evidence Excerpt
                         </button>
                     </div>
                 </div>
@@ -285,14 +284,14 @@
                 </div>
 
                 <div class="action-card">
-                    <p class="card-desc">Execute a simulated live RAG update of the entire AI engineering workspace deliverables directly on this dashboard interface.</p>
+                    <p class="card-desc">Run a browser-local simulation of the evidence refresh workflow: scan changes, review claims, redact sample secrets, and preview recruiter-safe outputs.</p>
                     <div style="display: flex; gap: 0.5rem; flex-direction: column;">
                         <button class="btn-refresh" id="btnRefreshSim">
-                            <span class="btn-icon">⚡</span>
+                            <span class="btn-icon">RUN</span>
                             <span class="btn-text">Run Single Refresh</span>
                         </button>
                         <button class="btn-refresh" id="btnLoopSim" style="background: linear-gradient(135deg, var(--color-purple) 0%, rgba(139, 92, 246, 0.45) 100%); border: 1px solid rgba(139, 92, 246, 0.3); box-shadow: 0 4px 15px rgba(139, 92, 246, 0.15);">
-                            <span class="btn-icon">🔄</span>
+                            <span class="btn-icon">LOOP</span>
                             <span class="btn-text">Start Loop Mode</span>
                         </button>
                     </div>
@@ -308,7 +307,7 @@
                 <div class="terminal-container side-terminal tab-content active" id="content-side-terminal" aria-label="Side chat terminal">
                     <div class="terminal-header" id="sideTerminalHeader">
                         <div style="display: flex; align-items: center; gap: 0.5rem;">
-                            <span class="drag-handle" title="Drag to hero area">⋮⋮</span>
+                            <span class="drag-handle" title="Drag to hero area">::</span>
                             <span class="side-terminal-mark" aria-hidden="true">/</span>
                             <span class="term-title">side_refresher_chat.log</span>
                         </div>
@@ -348,11 +347,11 @@
 
                         <div class="report-card" data-link-diagram="doctrine" data-link-spot="1">
                             <div class="report-card-header">
-                                <h4>1. Verification Posture</h4>
-                                <span class="report-status pass">STRONG</span>
+                                <h4>1. Demo Claim Review Snapshot</h4>
+                                <span class="report-status pass">EVIDENCE-BOUND</span>
                             </div>
                             <div class="report-card-body">
-                                <p>Total codebase claims analyzed: <strong>15</strong>. Keep queue: <strong>14</strong>. Downgraded/Removed: <strong>1</strong>.</p>
+                                <p>Demo snapshot claims analyzed: <strong>15</strong>. Keep queue: <strong>14</strong>. Downgraded/Removed: <strong>1</strong>.</p>
                             </div>
                         </div>
 
@@ -362,7 +361,7 @@
                                 <span class="report-status pass">SECURE</span>
                             </div>
                             <div class="report-card-body">
-                                <p>Credential leaks: <strong>0</strong>. Detected keys: <strong>2</strong> (Redacted successfully).</p>
+                                <p>Demo redaction scan: <strong>0 raw sample leaks</strong>. Detected placeholders: <strong>2</strong> (redacted successfully).</p>
                                 
                                 <!-- Redaction Interactive Option Controls -->
                                 <div class="redaction-controls" style="display: flex; gap: 0.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap;">
@@ -370,7 +369,7 @@
                                         <option value="stripe">Stripe Secret Token</option>
                                         <option value="supabase">Supabase Database URL</option>
                                         <option value="cookie">Session Cookie Header</option>
-                                        <option value="mnemonic">Web3 Wallet Mnemonic</option>
+                                        <option value="seedPhrase">Web3 Wallet Seed Phrase</option>
                                     </select>
                                     <button id="btnRedactScan" class="btn-redact-scan" style="background: var(--color-blue); color: #fff; border: none; font-size: 0.68rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 4px; cursor: pointer; transition: all 0.2s ease;">Scan & Redact</button>
                                 </div>
@@ -380,11 +379,11 @@
                                     <div class="redaction-split">
                                         <div class="redaction-pane raw">
                                             <span class="pane-title">Raw Log Input</span>
-                                            <pre><code id="redactRawCode">token = "sk_live_51NjU45k2Jfs82Skdjf9"</code></pre>
+                                            <pre><code id="redactRawCode">demo_secret_sample = "DEMO_SK_LIVE_REDACTION_SAMPLE"</code></pre>
                                         </div>
                                         <div class="redaction-pane sanitized">
                                             <span class="pane-title">Sanitized Report</span>
-                                            <pre><code id="redactCleanCode">token = "[REDACTED_TOKEN]"</code></pre>
+                                            <pre><code id="redactCleanCode">demo_secret_sample = "[REDACTED_TOKEN]"</code></pre>
                                         </div>
                                     </div>
                                     <div class="scanner-bar" id="scannerBar"></div>
@@ -395,10 +394,10 @@
                         <div class="report-card" data-link-diagram="workflow" data-link-spot="1">
                             <div class="report-card-header">
                                 <h4>3. Three-Level Backups</h4>
-                                <span class="report-status pass">VERIFIED</span>
+                                <span class="report-status pass">DEMO PASS</span>
                             </div>
                             <div class="report-card-body">
-                                <p>L1 Snapshot: <strong>Pass</strong>. L2 Zip: <strong>Pass</strong>. L3 Public Sanitized: <strong>Pass</strong>.</p>
+                                <p>Latest documented run preview: <strong>L1 snapshot</strong>, <strong>L2 zip</strong>, and <strong>L3 sanitized bundle</strong> are represented in the demo flow.</p>
                                 <div class="report-hashes">
                                     <code>L1 manifest: 8cf3a7e...</code>
                                 </div>
@@ -466,26 +465,26 @@
                                 <span class="report-status warn" id="gapsStatusBadge">MEDIUM</span>
                             </div>
                             <div class="report-card-body">
-                                <p style="margin-bottom: 0.6rem; font-size: 0.72rem; color: var(--text-secondary);">Toggle live gap fixes below to update the verification strength dynamically:</p>
+                                <p style="margin-bottom: 0.6rem; font-size: 0.72rem; color: var(--text-secondary);">Demo checklist only. Toggling these previews review posture; it does not prove a gap is resolved.</p>
                                 <div class="gaps-checklist" style="display: flex; flex-direction: column; gap: 0.5rem; background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.03);">
                                     <label class="gap-checkbox-label" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.7rem; color: var(--text-secondary); user-select: none;">
                                         <input type="checkbox" id="chkGap1" style="cursor: pointer; accent-color: var(--color-blue);">
-                                        <span class="gap-text">Fix RAG demo <code>embed_query</code> method <span class="gap-value" style="color: var(--color-blue); font-weight: 700;">(+1.8%)</span></span>
+                                        <span class="gap-text">Mark RAG demo <code>embed_query</code> for follow-up review <span class="gap-value" style="color: var(--color-blue); font-weight: 700;">(+1.8%)</span></span>
                                     </label>
                                     <label class="gap-checkbox-label" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.7rem; color: var(--text-secondary); user-select: none;">
                                         <input type="checkbox" id="chkGap2" style="cursor: pointer; accent-color: var(--color-purple);">
-                                        <span class="gap-text">Verify MiniMax API connector <span class="gap-value" style="color: var(--color-purple); font-weight: 700;">(+1.7%)</span></span>
+                                        <span class="gap-text">Mark MiniMax API connector for evidence review <span class="gap-value" style="color: var(--color-purple); font-weight: 700;">(+1.7%)</span></span>
                                     </label>
                                 </div>
                                 <p class="gaps-summary-text" id="gapsSummaryText" style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.4;">Baseline: 2 gaps outstanding. Overall Verification: <strong>96.5%</strong>.</p>
                             </div>
                         </div>
 
-                        <!-- 📄 Compile and Download Action Drawer Card -->
+                        <!-- ATS text preview action card -->
                         <div class="report-card" id="compilerActionCard" style="border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 1.5rem; padding-top: 1.2rem; background: transparent; border: none; box-shadow: none;">
                             <div class="report-card-body" style="padding: 0;">
                                 <button id="btnCompileResume" class="btn-compile-resume" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: linear-gradient(135deg, var(--color-green), #059669); color: #022c22; font-family: var(--font-sans); font-size: 0.78rem; font-weight: 750; letter-spacing: 0.02em; padding: 0.7rem; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);">
-                                    📄 Compile & Download ATS Resume
+                                    Build ATS Text Preview
                                 </button>
                             </div>
                         </div>
@@ -497,7 +496,7 @@
                     <div class="monitor-orbit" aria-hidden="true"></div>
                     <div class="monitor-header">
                         <span>Live Verification Strength</span>
-                        <strong id="verificationRatio">98.2% Strict</strong>
+                        <strong id="verificationRatio">Demo Review Mode</strong>
                     </div>
                     <div class="progress-track" aria-label="Verification strength progress">
                         <span class="progress-scan" aria-hidden="true"></span>
@@ -516,7 +515,7 @@
         <footer class="app-legend glassmorphic" data-tooltip="Employer summary: this section translates the visual system into practical engineering signals a hiring manager can evaluate.">
             <div class="legend-intro">
                 <span class="kicker">Employer Review Guide</span>
-                <h2>What This Dashboard Proves</h2>
+                <h2>What This Dashboard Demonstrates</h2>
                 <p>This dashboard is a review surface for evidence-driven AI engineering. It shows how raw workspace activity becomes verified resume material through ingestion, secret redaction, confidence grading, backups, and export generation. The important signal is not the visual polish alone; it is the trace from claim to source-code proof.</p>
             </div>
             <div class="legend-grid">
@@ -571,7 +570,7 @@
 
     <!-- 1. DYNAMIC CODE PROOF DRAWER OVERLAY -->
     <div class="code-drawer-overlay" id="codeDrawerOverlay"></div>
-    <div class="code-drawer" id="codeDrawer">
+    <div class="code-drawer" id="codeDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerFileName">
         <div class="drawer-header">
             <div class="drawer-meta">
                 <span class="drawer-tag" id="drawerFileTag">FILE PROOF</span>
@@ -583,17 +582,18 @@
         <!-- Action buttons -->
         <div class="drawer-actions" style="display: flex; flex-direction: column; gap: 0.6rem; padding: 0.8rem 1.5rem; background: rgba(0, 0, 0, 0.35); border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
             <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
-                <span class="file-path-indicator" id="drawerFilePath">c:/Users/Zhane/.../main.py</span>
-                <button class="btn-copy-code" id="btnCopyCode" title="Copy to Clipboard">
+                <span class="file-path-indicator" id="drawerFilePath">AI_RAG_DEMO_ROOT/src/agent_demo/main.py</span>
+                <button class="btn-copy-code" id="btnCopyCode" title="Copy to Clipboard" aria-describedby="copyStatus">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                     Copy
                 </button>
             </div>
+            <span class="sr-only" id="copyStatus" aria-live="polite"></span>
             <!-- QUICK SOURCE SWITCH TABS -->
-            <div class="drawer-source-tabs">
-                <button class="drawer-tab active" data-source="ingest">main.py</button>
-                <button class="drawer-tab" data-source="rag">evals.py</button>
-                <button class="drawer-tab" data-source="registry">RalphplanProofRegistry.sol</button>
+            <div class="drawer-source-tabs" role="tablist" aria-label="Evidence source excerpts">
+                <button class="drawer-tab active" data-source="ingest" role="tab" aria-selected="true">main.py</button>
+                <button class="drawer-tab" data-source="rag" role="tab" aria-selected="false">evals.py</button>
+                <button class="drawer-tab" data-source="registry" role="tab" aria-selected="false">RalphplanProofRegistry.sol</button>
             </div>
         </div>
         
@@ -607,11 +607,11 @@
         <div class="compiler-modal glassmorphic">
             <div class="compiler-modal-header">
                 <div class="pulse-ring green"></div>
-                <h3>Recruiter PDF Resume Compiler</h3>
+                <h3>ATS Text Preview Builder</h3>
             </div>
             <div class="compiler-modal-body">
                 <p style="font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 0.8rem; text-align: center;">
-                    Compiling ATS resume package with active, verified security scans and local evidence anchors.
+                    Building a browser-local ATS text preview. Final resume claims remain bound to the latest evidence report.
                 </p>
                 
                 <!-- compiler progress bar -->
@@ -633,7 +633,7 @@
             <div class="compiler-modal-footer" style="display: flex; justify-content: flex-end; gap: 0.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.8rem; margin-top: 0.5rem;">
                 <button id="btnCancelCompile" class="btn-secondary" style="font-size: 0.7rem; padding: 0.4rem 0.8rem; border-radius: 4px; border: 1px solid var(--border-color); background: transparent; color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease;">Cancel</button>
                 <button id="btnDownloadResumeCompiled" class="btn-primary" disabled style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; padding: 0.4rem 0.8rem; border-radius: 4px; background: var(--color-green); color: #022c22; font-weight: 700; border: none; cursor: not-allowed; opacity: 0.5; transition: all 0.2s ease;">
-                    Download Resume
+                    Download ATS Text Preview
                 </button>
             </div>
         </div>
