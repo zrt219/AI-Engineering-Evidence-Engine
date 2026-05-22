@@ -18,15 +18,20 @@
         <div class="blur-glow blur-blue"></div>
         <div class="blur-glow blur-purple"></div>
         <div class="grid-overlay"></div>
-        <div class="ambient-code-lines" aria-hidden="true">
-            <span>evidence.index.scan()</span>
-            <span>claim.grade = STRONG</span>
-            <span>redact("[REDACTED_SECRET]")</span>
-            <span>forge.export("ATS", "PDF", "DOCX")</span>
-            <span>backup.L1.snapshot.active</span>
-            <span>scribe.delta.commit_stream</span>
-            <span>atlas.block_unsupported_claim()</span>
-            <span>restore.path.verify_sha256()</span>
+        <div class="ambient-code-lines" id="ambientCodeField" aria-hidden="true">
+            <span class="ambient-line">evidence.index.scan()</span>
+            <span class="ambient-line">claim.grade = STRONG</span>
+            <span class="ambient-line">検証中 // atlas.verify.claim()</span>
+            <span class="ambient-line">redact("[REDACTED_SECRET]")</span>
+            <span class="ambient-line">forge.export("ATS", "PDF", "DOCX")</span>
+            <span class="ambient-line">エラー隔離 // error.quarantine()</span>
+            <span class="ambient-line">backup.L1.snapshot.active</span>
+            <span class="ambient-line">scribe.delta.commit_stream</span>
+            <span class="ambient-line">秘密を伏せる // redact.secrets()</span>
+            <span class="ambient-line">atlas.block_unsupported_claim()</span>
+            <span class="ambient-line">restore.path.verify_sha256()</span>
+            <span class="ambient-line">警告: proof_gap.detected()</span>
+            <span class="ambient-cursor-glyph" id="ambientCursorGlyph">エラー</span>
         </div>
     </div>
 

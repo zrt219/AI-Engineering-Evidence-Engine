@@ -202,6 +202,8 @@ const focusNodeMetrics = document.getElementById("focusNodeMetrics");
 const terminalLogs = document.getElementById("terminalLogs");
 const sideTerminalLogs = document.getElementById("sideTerminalLogs");
 const sideTerminalPromptInput = document.getElementById("sideTerminalPromptInput");
+const ambientCodeField = document.getElementById("ambientCodeField");
+const ambientCursorGlyph = document.getElementById("ambientCursorGlyph");
 const btnRefreshSim = document.getElementById("btnRefreshSim");
 const verificationRatio = document.getElementById("verificationRatio");
 const verificationProgressBar = document.getElementById("verificationProgressBar");
@@ -246,6 +248,8 @@ let loopIteration = 0;
 let activeProofKey = null; // Track currently inspectable code block key
 let activeTourStep = 0;
 let commandOutputLogs = null;
+let ambientPointerTimeout = null;
+let ambientPointerFrame = null;
 
 const tourSteps = [
     {
@@ -1248,6 +1252,60 @@ function clearTerminalLog(targetLogs = null) {
     ensureTerminalEmptyState(logs);
 }
 
+function sanitizeAmbientLine(line) {
+    return String(line || "")
+        .replace(/sk-[A-Za-z0-9_-]+/g, "[REDACTED_SECRET]")
+        .replace(/Bearer\s+[A-Za-z0-9._-]+/gi, "Bearer [REDACTED_TOKEN]")
+        .replace(/[A-Za-z0-9+/=_-]{36,}/g, "[REDACTED_TOKEN]")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, 96);
+}
+
+function mirrorAmbientCommand(line, styleClass = "info") {
+    if (!ambientCodeField || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const safeLine = sanitizeAmbientLine(line);
+    if (!safeLine) return;
+
+    const ghost = document.createElement("span");
+    ghost.className = `ambient-command-ghost ambient-${styleClass}`;
+    ghost.textContent = safeLine.includes("$ ") ? safeLine : `> ${safeLine}`;
+    ghost.style.setProperty("--ambient-top", `${Math.floor(Math.random() * 82) + 8}%`);
+    ghost.style.setProperty("--ambient-duration", `${Math.floor(Math.random() * 8) + 15}s`);
+    ghost.style.animationDelay = `${Math.random() * -2}s`;
+
+    ambientCodeField.appendChild(ghost);
+    const activeGhosts = ambientCodeField.querySelectorAll(".ambient-command-ghost");
+    if (activeGhosts.length > 18) activeGhosts[0].remove();
+    setTimeout(() => ghost.remove(), 22000);
+}
+
+function initAmbientEvidenceField() {
+    if (!ambientCodeField) return;
+
+    document.addEventListener("pointermove", (event) => {
+        if (ambientPointerFrame) return;
+        ambientPointerFrame = requestAnimationFrame(() => {
+            document.documentElement.style.setProperty("--cursor-x", `${event.clientX}px`);
+            document.documentElement.style.setProperty("--cursor-y", `${event.clientY}px`);
+            document.body.classList.add("ambient-pointer-active");
+
+            if (ambientCursorGlyph) {
+                const errorGlyphs = ["エラー", "警告", "異常", "復旧"];
+                const index = Math.abs(Math.floor((event.clientX + event.clientY) / 140)) % errorGlyphs.length;
+                ambientCursorGlyph.textContent = errorGlyphs[index];
+            }
+
+            clearTimeout(ambientPointerTimeout);
+            ambientPointerTimeout = setTimeout(() => {
+                document.body.classList.remove("ambient-pointer-active");
+            }, 900);
+            ambientPointerFrame = null;
+        });
+    }, { passive: true });
+}
+
 function appendTerminalLines(lines, styleClass, targetLogs = null) {
     const logs = activeTerminalLogs(targetLogs);
     if (!logs) return;
@@ -1257,6 +1315,7 @@ function appendTerminalLines(lines, styleClass, targetLogs = null) {
         logLine.classList.add("log-line", styleClass);
         logLine.textContent = line;
         logs.appendChild(logLine);
+        mirrorAmbientCommand(line, styleClass);
     });
     
     // Auto-scroll terminal to bottom
@@ -2253,6 +2312,8 @@ function closeTour() {
 
 // 8. Event listeners and initialization
 document.addEventListener("DOMContentLoaded", () => {
+    initAmbientEvidenceField();
+
     // Switch active main selector diagrams
     document.querySelectorAll(".selector-card").forEach(card => {
         card.addEventListener("click", () => {
