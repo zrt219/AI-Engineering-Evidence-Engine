@@ -10,9 +10,11 @@ The first screenshot shows the full Atlas-style dashboard: verification posture,
 
 The second screenshot opens the source-code proof drawer. That is the key behavior to notice, because it ties the dashboard back to real local code instead of leaving the system as a polished mockup.
 
-| Dashboard overview | Source-code proof drawer |
-|---|---|
-| ![AAED dashboard overview](assets/aaed-dashboard-overview.png) | ![AAED proof drawer](assets/aaed-proof-drawer.png) |
+## Dashboad overview 
+![AAED dashboard overview](assets/aaed-dashboard-overview.png) 
+
+## Source-code proof drawer
+![AAED proof drawer](assets/aaed-proof-drawer.png) |
 
 ## Alternative console mode
 <img width="1562" height="1278" alt="image" src="https://github.com/user-attachments/assets/a1c85b21-b4b9-4300-8853-46665d2cc342" />
