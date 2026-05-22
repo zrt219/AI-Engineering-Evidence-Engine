@@ -205,6 +205,16 @@ const verificationRatio = document.getElementById("verificationRatio");
 const verificationProgressBar = document.getElementById("verificationProgressBar");
 const systemState = document.getElementById("systemState");
 const postureLabel = document.getElementById("postureLabel");
+const tourOverlay = document.getElementById("tourOverlay");
+const btnStartTour = document.getElementById("btnStartTour");
+const btnSkipTour = document.getElementById("btnSkipTour");
+const btnNextTour = document.getElementById("btnNextTour");
+const tourProgress = document.getElementById("tourProgress");
+const tourKicker = document.getElementById("tourKicker");
+const tourTitle = document.getElementById("tourTitle");
+const tourBody = document.getElementById("tourBody");
+const tourCallout = document.getElementById("tourCallout");
+const tourStepDots = document.getElementById("tourStepDots");
 
 // Custom Interactive Selectors & Buttons
 const tabTerminalBtn = document.getElementById("tab-terminal");
@@ -227,6 +237,46 @@ let activeTimeouts = [];
 let typingSimulationActive = false;
 let loopIteration = 0;
 let activeProofKey = null; // Track currently inspectable code block key
+let activeTourStep = 0;
+
+const tourSteps = [
+    {
+        kicker: "First Timer Guide",
+        title: "What this dashboard is",
+        body: "This is the public control surface for the AI Engineering Evidence Engine. It explains how local engineering activity is converted into reviewable proof instead of loose portfolio claims.",
+        callout: "Read it as a proof system: claim -> evidence -> verification -> artifact."
+    },
+    {
+        kicker: "Step 2",
+        title: "Use the subsystem rail",
+        body: "The left rail changes the architecture map. Doctrine shows evidence rules, Pipeline shows the three RAG agents, and Workflow shows the backup/export lifecycle.",
+        callout: "Start with 01, then use 02 and 03 to see the system expand."
+    },
+    {
+        kicker: "Step 3",
+        title: "Follow the connector numbers",
+        body: "The numbered waypoints sit on the left edge so they do not fight the diagram. Each faint line points to the exact subsystem area being explained.",
+        callout: "Click a number to update the focus panel, logs, and related proof."
+    },
+    {
+        kicker: "Step 4",
+        title: "Inspect source-code proof",
+        body: "The proof drawer is the important employer-facing behavior. It links the visual story back to implementation excerpts instead of leaving the dashboard as a mockup.",
+        callout: "Use 'View Source Code Proof' after selecting a node."
+    },
+    {
+        kicker: "Step 5",
+        title: "Run the simulated refresh",
+        body: "The console demonstrates the daily evidence workflow: scan changed files, grade claims, redact secrets, write reports, and update recruiter-safe outputs.",
+        callout: "The dashboard labels this as simulated UI behavior, not live production automation."
+    },
+    {
+        kicker: "Step 6",
+        title: "What employers should take away",
+        body: "The system demonstrates AI product engineering, agentic workflow design, verification discipline, redaction awareness, backup-gated mutation, and employer-facing technical communication.",
+        callout: "The bottom guide translates each subsystem into hiring-review language."
+    }
+];
 
 // Command History Buffer for Mock CLI realism
 const commandHistory = [];
@@ -1014,18 +1064,44 @@ function renderHotspots(diagramKey) {
     hotspotLayer.innerHTML = "";
     const hotspots = hotspotsData[diagramKey];
     if (!hotspots) return;
+
+    const connectorSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    connectorSvg.classList.add("hotspot-connectors");
+    connectorSvg.setAttribute("viewBox", "0 0 100 100");
+    connectorSvg.setAttribute("preserveAspectRatio", "none");
+    hotspotLayer.appendChild(connectorSvg);
     
     hotspots.forEach((spot, index) => {
-        const hsElement = document.createElement("div");
+        const railX = 2.5;
+        const label = spot.title
+            .replace(/^Agent \d+:\s*/, "")
+            .replace(/\s*\(.+?\)\s*/g, "")
+            .split(" ")
+            .slice(0, 3)
+            .join(" ");
+
+        const connector = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        connector.classList.add("hotspot-connector");
+        if (index === 0) connector.classList.add("active");
+        connector.setAttribute("x1", String(railX + 2));
+        connector.setAttribute("y1", String(spot.y));
+        connector.setAttribute("x2", String(spot.x));
+        connector.setAttribute("y2", String(spot.y));
+        connector.setAttribute("data-index", index);
+        connectorSvg.appendChild(connector);
+
+        const hsElement = document.createElement("button");
+        hsElement.type = "button";
         hsElement.classList.add("hotspot");
         if (index === 0) hsElement.classList.add("active"); // default active spot
         
-        hsElement.style.left = `${spot.x}%`;
+        hsElement.style.left = `${railX}%`;
         hsElement.style.top = `${spot.y}%`;
         hsElement.setAttribute("data-index", index);
+        hsElement.setAttribute("aria-label", `Focus ${spot.title}`);
         
         // Inject Numbered waypoint label (01, 02, etc.) matching diagram circles
-        hsElement.textContent = `0${index + 1}`;
+        hsElement.innerHTML = `<span class="hotspot-num">0${index + 1}</span><span class="hotspot-label">${escapeHTML(label)}</span>`;
         
         hsElement.addEventListener("click", () => {
             selectHotspot(diagramKey, index);
@@ -1040,10 +1116,13 @@ function selectHotspot(diagramKey, index) {
     // Remove active state from all hotspots in layer
     const allSpots = hotspotLayer.querySelectorAll(".hotspot");
     allSpots.forEach(s => s.classList.remove("active"));
+    hotspotLayer.querySelectorAll(".hotspot-connector").forEach(line => line.classList.remove("active"));
     
     // Set clicked hotspot to active
     const activeSpot = hotspotLayer.querySelector(`.hotspot[data-index="${index}"]`);
     if (activeSpot) activeSpot.classList.add("active");
+    const activeConnector = hotspotLayer.querySelector(`.hotspot-connector[data-index="${index}"]`);
+    if (activeConnector) activeConnector.classList.add("active");
     
     const hotspots = hotspotsData[diagramKey];
     if (!hotspots || !hotspots[index]) return;
@@ -1831,6 +1910,46 @@ function closeCompilerModal() {
     }
 }
 
+function renderTourStep(stepIndex) {
+    if (!tourOverlay || !tourSteps[stepIndex]) return;
+    const step = tourSteps[stepIndex];
+    activeTourStep = stepIndex;
+
+    tourProgress.textContent = `Step ${stepIndex + 1} of ${tourSteps.length}`;
+    tourKicker.textContent = step.kicker;
+    tourTitle.textContent = step.title;
+    tourBody.textContent = step.body;
+    tourCallout.textContent = step.callout;
+    btnNextTour.textContent = stepIndex === tourSteps.length - 1 ? "Finish" : "Next";
+
+    if (tourStepDots) {
+        tourStepDots.innerHTML = "";
+        tourSteps.forEach((_, index) => {
+            const dot = document.createElement("button");
+            dot.type = "button";
+            dot.className = index === stepIndex ? "tour-dot active" : "tour-dot";
+            dot.setAttribute("aria-label", `Open tour step ${index + 1}`);
+            dot.addEventListener("click", () => renderTourStep(index));
+            tourStepDots.appendChild(dot);
+        });
+    }
+}
+
+function openTour(force = false) {
+    if (!tourOverlay) return;
+    if (!force && localStorage.getItem("aaedTourDismissed") === "true") return;
+    renderTourStep(0);
+    tourOverlay.classList.add("active");
+    tourOverlay.setAttribute("aria-hidden", "false");
+}
+
+function closeTour() {
+    if (!tourOverlay) return;
+    tourOverlay.classList.remove("active");
+    tourOverlay.setAttribute("aria-hidden", "true");
+    localStorage.setItem("aaedTourDismissed", "true");
+}
+
 // 8. Event listeners and initialization
 document.addEventListener("DOMContentLoaded", () => {
     // Switch active main selector diagrams
@@ -1846,6 +1965,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // Wire Loop Mode Simulator Toggle Button
     if (btnLoopSim) {
         btnLoopSim.addEventListener("click", toggleLoopMode);
+    }
+
+    if (btnStartTour) {
+        btnStartTour.addEventListener("click", () => openTour(true));
+    }
+    if (btnSkipTour) {
+        btnSkipTour.addEventListener("click", closeTour);
+    }
+    if (btnNextTour) {
+        btnNextTour.addEventListener("click", () => {
+            if (activeTourStep >= tourSteps.length - 1) {
+                closeTour();
+                return;
+            }
+            renderTourStep(activeTourStep + 1);
+        });
     }
 
     // Wired console tab click listeners
@@ -2017,6 +2152,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.key === "Escape") {
             closeCodeDrawer();
             closeCompilerModal();
+            closeTour();
         }
     });
 
@@ -2225,6 +2361,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize default diagram rendering (Core Doctrine)
     switchDiagram("doctrine");
     updateGapsIntegrity(); // Initial run of integrity calculation
+    setTimeout(() => openTour(false), 650);
 
     // --- TERMINAL DRAG & DROP LOGIC ---
     const terminalContainer = document.getElementById("content-terminal");

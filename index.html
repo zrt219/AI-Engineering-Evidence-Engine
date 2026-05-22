@@ -18,11 +18,21 @@
         <div class="blur-glow blur-blue"></div>
         <div class="blur-glow blur-purple"></div>
         <div class="grid-overlay"></div>
+        <div class="ambient-code-lines" aria-hidden="true">
+            <span>evidence.index.scan()</span>
+            <span>claim.grade = STRONG</span>
+            <span>redact("[REDACTED_SECRET]")</span>
+            <span>forge.export("ATS", "PDF", "DOCX")</span>
+            <span>backup.L1.snapshot.active</span>
+            <span>scribe.delta.commit_stream</span>
+            <span>atlas.block_unsupported_claim()</span>
+            <span>restore.path.verify_sha256()</span>
+        </div>
     </div>
 
     <div class="dashboard-wrapper">
         <!-- HEADER Section -->
-        <header class="app-header">
+        <header class="app-header" data-tooltip="Start here: this is the public proof dashboard for the AI Engineering Evidence Engine. It shows how local engineering evidence is ingested, verified, redacted, and converted into employer-facing artifacts.">
             <div class="header-left">
                 <div class="header-meta">
                     <span class="system-badge">System Atlas v2.4</span>
@@ -35,6 +45,7 @@
                 <h1>AI Engineering Evidence Engine</h1>
                 <p class="subtitle">Interactive Architecture & Automation Workspace for Zhane Grey's Evidence Pipeline</p>
                 <div class="social-links" aria-label="Zhane Grey social links">
+                    <button class="social-link social-link-button" id="btnStartTour" type="button">Start Tour</button>
                     <a href="https://github.com/zrt219" target="_blank" rel="noreferrer" class="social-link">GitHub</a>
                     <a href="https://www.linkedin.com/in/zhane-grey-987258395" target="_blank" rel="noreferrer" class="social-link">LinkedIn</a>
                     <a href="https://beacons.ai/zrt_219" target="_blank" rel="noreferrer" class="social-link">Portfolio</a>
@@ -63,7 +74,7 @@
         <main class="dashboard-grid">
             
             <!-- LEFT PANEL: Navigation & Diagram Selection -->
-            <aside class="panel nav-panel glassmorphic">
+            <aside class="panel nav-panel glassmorphic" data-tooltip="Pick one subsystem at a time. This rail keeps the story organized: doctrine, daily refresh pipeline, and backup/export loop.">
                 <div class="panel-header">
                     <span class="kicker">Core Subsystems</span>
                     <h2>Interactive Map Selector</h2>
@@ -111,7 +122,7 @@
             </aside>
 
             <!-- MIDDLE WORKSPACE: Interactive Diagram & Hotspots -->
-            <section class="panel stage-panel glassmorphic">
+            <section class="panel stage-panel glassmorphic" data-tooltip="The center stage is the architecture map. The numbered waypoints on the left connect to the exact diagram area they explain.">
                 <div class="panel-header stage-header">
                     <div>
                         <span class="kicker" id="stageKicker">Diagram Visualizer</span>
@@ -155,7 +166,7 @@
                     </div>
                 </div>
 
-                <div class="viewer-frame">
+                <div class="viewer-frame" data-tooltip="Click the numbered connector nodes to change the active proof focus. The line shows what each number maps to without covering the diagram.">
                     <div class="image-wrapper" id="imageWrapper">
                         <img id="activeDiagram" src="images/core_doctrine_diagram.png" alt="Core Verification Doctrine Flowchart">
                         
@@ -187,7 +198,7 @@
             </section>
 
             <!-- RIGHT PANEL: Live Simulator Controls & Technical Logs -->
-            <aside class="panel control-panel glassmorphic">
+            <aside class="panel control-panel glassmorphic" data-tooltip="Use this side rail to run the simulated refresh, inspect the recruiter report, test redaction, and watch verification strength update.">
                 <div class="panel-header">
                     <span class="kicker">Execution & Ingest</span>
                     <h2>Automation Console</h2>
@@ -401,16 +412,19 @@
                 </div>
 
                 <!-- Live Drift Monitor -->
-                <div class="drift-monitor">
+                <div class="drift-monitor" aria-label="Live verification strength monitor" data-tooltip="This card summarizes the current strict verification score. The animated rail represents evidence strength and backup readiness, not production usage.">
+                    <div class="monitor-orbit" aria-hidden="true"></div>
                     <div class="monitor-header">
                         <span>Live Verification Strength</span>
                         <strong id="verificationRatio">98.2% Strict</strong>
                     </div>
-                    <div class="progress-track">
+                    <div class="progress-track" aria-label="Verification strength progress">
+                        <span class="progress-scan" aria-hidden="true"></span>
                         <div class="progress-bar" id="verificationProgressBar" style="width: 98.2%;"></div>
                     </div>
                     <div class="monitor-footer">
                         <span>3-Level Backup: <strong class="text-green">L1 Snap Active</strong></span>
+                        <span class="monitor-pulse-row" aria-hidden="true"><i></i><i></i><i></i></span>
                     </div>
                 </div>
             </aside>
@@ -418,43 +432,58 @@
         </main>
 
         <!-- LEGEND & TECHNICAL CAPABILITIES -->
-        <footer class="app-legend glassmorphic">
+        <footer class="app-legend glassmorphic" data-tooltip="Employer summary: this section translates the visual system into practical engineering signals a hiring manager can evaluate.">
             <div class="legend-intro">
-                <span class="kicker">Technical Capability</span>
-                <h2>Verifiable Engineering Ethics</h2>
-                <p>This interactive panel demonstrates the automated lifecycle of Zhane Grey's development workflow. By converting visual schematics into interactive nodes, hiring managers can trace and audit the exact rules, APIs, and pipelines that govern this system.</p>
+                <span class="kicker">Employer Review Guide</span>
+                <h2>What This Dashboard Proves</h2>
+                <p>This dashboard is a review surface for evidence-driven AI engineering. It shows how raw workspace activity becomes verified resume material through ingestion, secret redaction, confidence grading, backups, and export generation. The important signal is not the visual polish alone; it is the trace from claim to source-code proof.</p>
             </div>
             <div class="legend-grid">
                 <div class="legend-cell">
                     <span class="swatch swatch-blue"></span>
                     <div class="cell-content">
-                        <strong>Evidence-First Ingestion</strong>
-                        <p>Automatically flags unverified or aspirational skills, keeping them off final ATS resumes.</p>
+                        <strong>Evidence-First Claim Intake</strong>
+                        <p>Separates verified engineering work from aspirational notes before a claim is allowed into resume or portfolio copy.</p>
                     </div>
                 </div>
                 <div class="legend-cell">
                     <span class="swatch swatch-green"></span>
                     <div class="cell-content">
-                        <strong>Secret Redaction Layer</strong>
-                        <p>Active code blocks parse and replace private keys, Supabase URLs, and cookie variables with generic tags.</p>
+                        <strong>Security-Aware Redaction</strong>
+                        <p>Demonstrates how private tokens, URLs, cookies, and session material are replaced with safe placeholders before public artifacts are written.</p>
                     </div>
                 </div>
                 <div class="legend-cell">
                     <span class="swatch swatch-purple"></span>
                     <div class="cell-content">
-                        <strong>Three-Level Backup Protocol</strong>
-                        <p>Protects source materials before and after compiles, generating SHA256 checksum tags in L1.</p>
+                        <strong>Backup-Gated Mutation</strong>
+                        <p>Shows a reliability habit: source documents are protected before mutation, with restore paths and checksum evidence tracked.</p>
                     </div>
                 </div>
                 <div class="legend-cell">
                     <span class="swatch swatch-gold"></span>
                     <div class="cell-content">
-                        <strong>Multi-Agent Handoffs</strong>
-                        <p>Coordinates parallel runs of specialized RAG engines with standard verification and compile audits.</p>
+                        <strong>Multi-Agent Workflow Design</strong>
+                        <p>Frames SCRIBE, ATLAS, and FORGE as specialized lanes for indexing, verification, and artifact generation.</p>
                     </div>
                 </div>
             </div>
         </footer>
+    </div>
+
+    <div class="tour-overlay" id="tourOverlay" aria-hidden="true">
+        <section class="tour-card glassmorphic" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+            <div class="tour-progress" id="tourProgress">Step 1 of 6</div>
+            <span class="kicker" id="tourKicker">First Timer Guide</span>
+            <h2 id="tourTitle">What you are looking at</h2>
+            <p id="tourBody">This is an employer-facing dashboard for the AI Engineering Evidence Engine. It explains how local engineering proof becomes verified resume, diary, and evidence artifacts.</p>
+            <div class="tour-callout" id="tourCallout">Goal: make claims traceable instead of vague.</div>
+            <div class="tour-actions">
+                <button class="tour-skip" id="btnSkipTour" type="button">Skip Tour</button>
+                <div class="tour-step-dots" id="tourStepDots" aria-label="Tour progress"></div>
+                <button class="tour-next" id="btnNextTour" type="button">Next</button>
+            </div>
+        </section>
     </div>
 
     <script type="module" src="./app.js"></script>

@@ -84,6 +84,42 @@ body {
     z-index: -1;
 }
 
+.ambient-code-lines {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    opacity: 0.18;
+    mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+}
+
+.ambient-code-lines span {
+    position: absolute;
+    left: -42ch;
+    color: rgba(125, 211, 252, 0.52);
+    font-family: var(--font-mono);
+    font-size: clamp(0.62rem, 0.45vw + 0.45rem, 0.9rem);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    text-shadow: 0 0 16px rgba(59, 130, 246, 0.32);
+    animation: ambientCodeDrift 24s linear infinite;
+}
+
+.ambient-code-lines span:nth-child(1) { top: 9%; animation-delay: -2s; }
+.ambient-code-lines span:nth-child(2) { top: 18%; animation-delay: -12s; animation-duration: 28s; }
+.ambient-code-lines span:nth-child(3) { top: 31%; animation-delay: -7s; animation-duration: 31s; }
+.ambient-code-lines span:nth-child(4) { top: 43%; animation-delay: -16s; animation-duration: 26s; }
+.ambient-code-lines span:nth-child(5) { top: 55%; animation-delay: -5s; animation-duration: 34s; }
+.ambient-code-lines span:nth-child(6) { top: 68%; animation-delay: -20s; animation-duration: 30s; }
+.ambient-code-lines span:nth-child(7) { top: 79%; animation-delay: -10s; animation-duration: 36s; }
+.ambient-code-lines span:nth-child(8) { top: 91%; animation-delay: -24s; animation-duration: 32s; }
+
+@keyframes ambientCodeDrift {
+    0% { transform: translateX(0); opacity: 0; }
+    8% { opacity: 0.9; }
+    90% { opacity: 0.65; }
+    100% { transform: translateX(calc(100vw + 84ch)); opacity: 0; }
+}
+
 /* Dashboard Layout */
 .dashboard-wrapper {
     max-width: 1600px;
@@ -93,6 +129,64 @@ body {
     flex-direction: column;
     gap: 2rem;
     min-height: 100vh;
+}
+
+[data-tooltip] {
+    position: relative;
+}
+
+[data-tooltip]::before,
+[data-tooltip]::after {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 80;
+}
+
+[data-tooltip]::before {
+    content: attr(data-tooltip);
+    right: 1rem;
+    bottom: calc(100% + 0.75rem);
+    width: min(340px, calc(100vw - 2rem));
+    padding: 0.75rem 0.85rem;
+    border: 1px solid rgba(59, 130, 246, 0.28);
+    border-radius: 10px;
+    background: rgba(5, 10, 20, 0.94);
+    color: var(--text-primary);
+    font-size: 0.74rem;
+    line-height: 1.45;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+    transform: translateY(8px);
+}
+
+[data-tooltip]::after {
+    content: "?";
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 18px;
+    height: 18px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    border: 1px solid rgba(59, 130, 246, 0.42);
+    background: rgba(59, 130, 246, 0.18);
+    color: #bfdbfe;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    opacity: 0.5;
+}
+
+[data-tooltip]:hover::before,
+[data-tooltip]:focus-within::before {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus-within::after {
+    opacity: 1;
 }
 
 /* Glassmorphism panel base */
@@ -233,6 +327,13 @@ body {
     letter-spacing: 0.03em;
     text-decoration: none;
     transition: all 0.25s ease;
+}
+
+.social-link-button {
+    cursor: pointer;
+    color: #dbeafe;
+    border-color: rgba(59, 130, 246, 0.34);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(16, 185, 129, 0.08));
 }
 
 .social-link:hover {
@@ -718,10 +819,35 @@ body {
     pointer-events: none; /* Let clicks pass to wrapper if needed, or overlay captures them */
 }
 
+.hotspot-connectors {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 18;
+}
+
+.hotspot-connector {
+    stroke: rgba(147, 197, 253, 0.28);
+    stroke-width: 1.4;
+    stroke-dasharray: 5 7;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.16));
+    transition: stroke 0.25s ease, stroke-width 0.25s ease, opacity 0.25s ease;
+}
+
+.hotspot-connector.active {
+    stroke: rgba(45, 212, 191, 0.78);
+    stroke-width: 2.2;
+    stroke-dasharray: 0;
+}
+
 .hotspot {
     position: absolute;
-    width: 26px;
-    height: 26px;
+    width: 30px;
+    height: 30px;
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: rgba(7, 9, 14, 0.9);
@@ -738,7 +864,11 @@ body {
     font-weight: 700;
     box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
     user-select: none;
-    z-index: 20;
+    z-index: 22;
+}
+
+.hotspot::marker {
+    display: none;
 }
 
 .hotspot::before {
@@ -778,6 +908,34 @@ body {
 
 .hotspot.active::after {
     border-color: var(--color-green);
+}
+
+.hotspot .hotspot-label {
+    position: absolute;
+    left: calc(100% + 0.55rem);
+    top: 50%;
+    transform: translateY(-50%);
+    width: max-content;
+    max-width: 132px;
+    padding: 0.22rem 0.45rem;
+    border: 1px solid rgba(147, 197, 253, 0.18);
+    border-radius: 999px;
+    background: rgba(7, 9, 14, 0.72);
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    line-height: 1.2;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+}
+
+.hotspot:hover .hotspot-label {
+    opacity: 1;
+    transform: translateY(-50%) translateX(2px);
+    border-color: rgba(45, 212, 191, 0.35);
+    color: var(--text-primary);
 }
 
 /* Stage details explanation footer */
@@ -945,47 +1103,168 @@ body {
 
 /* Drift Monitor card */
 .drift-monitor {
-    background: rgba(255, 255, 255, 0.015);
-    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 14% 20%, rgba(59, 130, 246, 0.2), transparent 34%),
+        radial-gradient(circle at 88% 38%, rgba(16, 185, 129, 0.16), transparent 30%),
+        rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(125, 211, 252, 0.16);
     border-radius: 12px;
     padding: 1rem;
     margin-top: auto;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.32), inset 0 0 32px rgba(59, 130, 246, 0.04);
+    isolation: isolate;
+}
+
+.drift-monitor::before {
+    content: "";
+    position: absolute;
+    inset: -45%;
+    background: conic-gradient(from 120deg, transparent, rgba(59, 130, 246, 0.16), transparent 26%, rgba(16, 185, 129, 0.12), transparent 52%);
+    animation: monitorSweep 8s linear infinite;
+    z-index: -2;
+}
+
+.drift-monitor::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.045), transparent 42%, rgba(16, 185, 129, 0.04));
+    z-index: -1;
+}
+
+.monitor-orbit {
+    position: absolute;
+    inset: 0.5rem;
+    border-radius: 10px;
+    border: 1px dashed rgba(125, 211, 252, 0.13);
+    animation: orbitPulse 2.8s ease-in-out infinite;
+    pointer-events: none;
 }
 
 .drift-monitor .monitor-header {
+    position: relative;
     display: flex;
     justify-content: space-between;
+    gap: 1rem;
     font-size: 0.78rem;
     color: var(--text-secondary);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.62rem;
 }
 
 .drift-monitor .monitor-header strong {
     color: var(--color-green);
+    text-shadow: 0 0 18px rgba(16, 185, 129, 0.42);
+    animation: strictPulse 2.5s ease-in-out infinite;
 }
 
 .progress-track {
-    background: rgba(255, 255, 255, 0.05);
-    height: 6px;
-    border-radius: 3px;
+    position: relative;
+    background: rgba(4, 9, 18, 0.76);
+    height: 8px;
+    border-radius: 999px;
     overflow: hidden;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.7rem;
+    border: 1px solid rgba(147, 197, 253, 0.12);
+    box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.55);
+}
+
+.progress-track::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(90deg, transparent 0 12px, rgba(255, 255, 255, 0.07) 12px 13px);
+    opacity: 0.45;
+}
+
+.progress-scan {
+    position: absolute;
+    top: -80%;
+    bottom: -80%;
+    width: 34%;
+    left: -36%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transform: skewX(-24deg);
+    animation: progressScan 2.2s ease-in-out infinite;
+    z-index: 3;
 }
 
 .progress-bar {
-    background: linear-gradient(90deg, var(--color-blue) 0%, var(--color-green) 100%);
+    position: relative;
+    background: linear-gradient(90deg, var(--color-blue) 0%, #22d3ee 42%, var(--color-green) 100%);
+    background-size: 180% 100%;
     height: 100%;
-    border-radius: 3px;
+    border-radius: 999px;
     transition: width 0.5s ease;
+    animation: verificationFlow 3s linear infinite;
+    box-shadow: 0 0 16px rgba(34, 211, 238, 0.34), 0 0 28px rgba(16, 185, 129, 0.2);
 }
 
 .drift-monitor .monitor-footer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
     font-size: 0.68rem;
     color: var(--text-muted);
 }
 
+.monitor-pulse-row {
+    display: inline-flex;
+    gap: 0.24rem;
+    align-items: center;
+}
+
+.monitor-pulse-row i {
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--color-green);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.52);
+    animation: monitorDot 1.2s ease-in-out infinite;
+}
+
+.monitor-pulse-row i:nth-child(2) { animation-delay: 0.18s; }
+.monitor-pulse-row i:nth-child(3) { animation-delay: 0.36s; }
+
 .text-green {
     color: var(--color-green);
+}
+
+@keyframes monitorSweep {
+    0% { transform: rotate(0deg); opacity: 0.5; }
+    50% { opacity: 0.85; }
+    100% { transform: rotate(360deg); opacity: 0.5; }
+}
+
+@keyframes orbitPulse {
+    0%, 100% { opacity: 0.45; transform: scale(1); }
+    50% { opacity: 0.85; transform: scale(1.015); }
+}
+
+@keyframes strictPulse {
+    0%, 100% { opacity: 0.86; }
+    50% { opacity: 1; }
+}
+
+@keyframes progressScan {
+    0% { left: -36%; opacity: 0; }
+    20% { opacity: 0.85; }
+    80% { opacity: 0.65; }
+    100% { left: 104%; opacity: 0; }
+}
+
+@keyframes verificationFlow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 180% 50%; }
+}
+
+@keyframes monitorDot {
+    0%, 100% { transform: translateY(0); opacity: 0.35; }
+    50% { transform: translateY(-2px); opacity: 1; }
 }
 
 /* APP LEGEND GRID FOOTER */
@@ -1050,6 +1329,133 @@ body {
     font-size: 0.75rem;
     color: var(--text-secondary);
     line-height: 1.4;
+}
+
+.tour-overlay {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 1.5rem;
+    background:
+        radial-gradient(circle at 50% 24%, rgba(59, 130, 246, 0.18), transparent 34%),
+        rgba(3, 7, 15, 0.78);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 1000;
+}
+
+.tour-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.tour-card {
+    width: min(640px, 100%);
+    padding: 1.6rem;
+    border-color: rgba(59, 130, 246, 0.26);
+    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.58), 0 0 80px rgba(59, 130, 246, 0.1);
+    transform: translateY(12px) scale(0.98);
+    transition: transform 0.25s ease;
+}
+
+.tour-overlay.active .tour-card {
+    transform: translateY(0) scale(1);
+}
+
+.tour-progress {
+    float: right;
+    padding: 0.28rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid rgba(125, 211, 252, 0.22);
+    background: rgba(59, 130, 246, 0.09);
+    color: #bfdbfe;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+}
+
+.tour-card h2 {
+    clear: both;
+    margin-top: 0.35rem;
+    margin-bottom: 0.75rem;
+    font-size: clamp(1.55rem, 3vw, 2.25rem);
+    letter-spacing: -0.04em;
+}
+
+.tour-card p {
+    color: var(--text-secondary);
+    font-size: 0.98rem;
+    line-height: 1.65;
+}
+
+.tour-callout {
+    margin: 1.25rem 0;
+    padding: 0.9rem 1rem;
+    border: 1px solid rgba(16, 185, 129, 0.22);
+    border-left: 4px solid var(--color-green);
+    border-radius: 12px;
+    background: rgba(16, 185, 129, 0.07);
+    color: #d1fae5;
+    font-size: 0.86rem;
+    font-weight: 650;
+}
+
+.tour-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.tour-skip,
+.tour-next {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    padding: 0.62rem 1rem;
+    font-family: var(--font-sans);
+    font-weight: 750;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.tour-skip {
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.tour-next {
+    color: #04111f;
+    background: linear-gradient(135deg, #60a5fa, #2dd4bf);
+    box-shadow: 0 12px 30px rgba(45, 212, 191, 0.16);
+}
+
+.tour-skip:hover,
+.tour-next:hover {
+    transform: translateY(-1px);
+    border-color: rgba(147, 197, 253, 0.35);
+}
+
+.tour-step-dots {
+    display: inline-flex;
+    gap: 0.42rem;
+    align-items: center;
+}
+
+.tour-dot {
+    width: 8px;
+    height: 8px;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(148, 163, 184, 0.35);
+    cursor: pointer;
+}
+
+.tour-dot.active {
+    width: 24px;
+    background: linear-gradient(90deg, var(--color-blue), var(--color-green));
 }
 
 /* Frame Scanline animation effect */
@@ -1940,6 +2346,10 @@ body {
         height: 20px !important;
         font-size: 0.55rem !important;
     }
+
+    .hotspot .hotspot-label {
+        display: none;
+    }
     
     .stage-footer {
         flex-direction: column !important;
@@ -1972,6 +2382,20 @@ body {
         padding: 1rem !important;
         gap: 1rem !important;
     }
+
+    [data-tooltip]::before {
+        right: 0.5rem;
+        left: 0.5rem;
+        width: auto;
+    }
+
+    .tour-card {
+        padding: 1.15rem;
+    }
+
+    .tour-actions {
+        flex-wrap: wrap;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1988,6 +2412,21 @@ body {
     .stat-box {
         min-width: 100% !important;
         flex: 1 1 100% !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+    }
+
+    .ambient-code-lines {
+        display: none;
     }
 }
 
