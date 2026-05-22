@@ -32,38 +32,97 @@
 
     <div class="dashboard-wrapper">
         <!-- HEADER Section -->
-        <header class="app-header" data-tooltip="Start here: this is the public proof dashboard for the AI Engineering Evidence Engine. It shows how local engineering evidence is ingested, verified, redacted, and converted into employer-facing artifacts.">
+        <header class="app-header" data-tooltip="Start here: this public dashboard demonstrates the workflow for ingesting, checking, redacting, and preparing evidence-backed AI engineering artifacts.">
             <div class="header-left">
                 <div class="header-meta">
                     <span class="system-badge">System Atlas v2.4</span>
-                    <a href="https://github.com/zrt219" target="_blank" rel="noreferrer" class="github-badge" id="githubLink">
+                    <a href="https://github.com/zrt219" target="_blank" rel="noopener noreferrer" class="github-badge" id="githubLink">
                         <svg class="github-icon" viewBox="0 0 16 16" version="1.1" width="12" height="12" aria-hidden="true" style="fill: currentColor; margin-right: 4px; vertical-align: middle;"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
                         github.com/zrt219
                     </a>
-                    <span class="audit-badge">Audit-Ready: OpenAI / Anthropic</span>
+                    <span class="audit-badge">Employer Review Mode</span>
                 </div>
                 <h1>AI Engineering Evidence Engine</h1>
                 <p class="subtitle">Interactive Architecture & Automation Workspace for Zhane Grey's Evidence Pipeline</p>
-                <div class="social-links" aria-label="Zhane Grey social links">
-                    <button class="social-link social-link-button" id="btnStartTour" type="button">Start Tour</button>
-                    <a href="https://github.com/zrt219" target="_blank" rel="noreferrer" class="social-link">GitHub</a>
-                    <a href="https://www.linkedin.com/in/zhane-grey-987258395" target="_blank" rel="noreferrer" class="social-link">LinkedIn</a>
-                    <a href="https://beacons.ai/zrt_219" target="_blank" rel="noreferrer" class="social-link">Portfolio</a>
-                    <a href="mailto:zpeace11@gmail.com" class="social-link">Email</a>
+                <div class="header-proof-bar" aria-label="Review links and technology stack">
+                    <div class="proof-links" aria-label="Employer review links">
+                        <button class="social-link social-link-button" id="btnStartTour" type="button">Start Tour</button>
+                        <a href="https://github.com/zrt219/AI-Engineering-Evidence-Engine" target="_blank" rel="noopener noreferrer" class="social-link proof-link">Source Repo</a>
+                        <a href="https://zhane-grey-evidence-dashboard.vercel.app/" target="_blank" rel="noopener noreferrer" class="social-link proof-link">Public Demo</a>
+                        <a href="https://umattr.ca" target="_blank" rel="noopener noreferrer" class="social-link proof-link umattr-link" aria-label="UMATTR.ca Technical Lead Developer">
+                            <img src="assets/umattr-technical-lead-logo.png" alt="" class="brand-icon">
+                            <span>UMATTR.ca</span>
+                            <span class="role-label">Technical Lead Developer</span>
+                        </a>
+                    </div>
+                    <div class="social-links" aria-label="Zhane Grey social links">
+                        <a href="https://github.com/zrt219" target="_blank" rel="noopener noreferrer" class="social-link">
+                            <svg class="social-icon" viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M8 0C3.58 0 0 3.65 0 8.15c0 3.6 2.29 6.65 5.47 7.73.4.08.55-.17.55-.38v-1.43c-2.23.49-2.7-1.1-2.7-1.1-.36-.94-.88-1.2-.88-1.2-.73-.5.05-.5.05-.5.8.06 1.22.84 1.22.84.72 1.24 1.87.88 2.33.67.07-.53.28-.88.51-1.09-1.78-.2-3.64-.9-3.64-4.02 0-.9.31-1.62.82-2.19-.08-.2-.36-1.03.08-2.16 0 0 .67-.22 2.2.84A7.37 7.37 0 0 1 8 3.9c.68 0 1.36.09 2 .27 1.53-1.06 2.2-.84 2.2-.84.44 1.13.16 1.96.08 2.16.51.57.82 1.29.82 2.19 0 3.13-1.87 3.82-3.65 4.02.29.26.54.75.54 1.51v2.29c0 .21.15.46.55.38A8.08 8.08 0 0 0 16 8.15C16 3.65 12.42 0 8 0Z"></path>
+                            </svg>
+                            GitHub
+                        </a>
+                        <a href="https://www.linkedin.com/in/zhane-grey-987258395" target="_blank" rel="noopener noreferrer" class="social-link">
+                            <svg class="social-icon" viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M3.58 5.25H.72V16h2.86V5.25ZM2.15 0C1.22 0 .5.72.5 1.65c0 .9.7 1.64 1.61 1.64h.02c.95 0 1.54-.74 1.54-1.64C3.65.72 3.08 0 2.15 0ZM16 9.84c0-3.29-1.76-4.82-4.1-4.82-1.9 0-2.75 1.04-3.22 1.78V5.25H5.82c.04 1.01 0 10.75 0 10.75h2.86v-6c0-.32.02-.64.12-.87.26-.64.85-1.31 1.85-1.31 1.3 0 1.82.99 1.82 2.45V16H16V9.84Z"></path>
+                            </svg>
+                            LinkedIn
+                        </a>
+                        <a href="https://beacons.ai/zrt_219" target="_blank" rel="noopener noreferrer" class="social-link">
+                            <svg class="social-icon" viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M8 1.1 14.2 4.7v6.6L8 14.9l-6.2-3.6V4.7L8 1.1Zm0 1.7L3.3 5.5v5L8 13.2l4.7-2.7v-5L8 2.8Zm0 2.1 3 1.75v3.5L8 11.9l-3-1.75v-3.5L8 4.9Zm0 1.7L6.5 7.47v1.76L8 10.1l1.5-.87V7.47L8 6.6Z"></path>
+                            </svg>
+                            Beacons
+                        </a>
+                        <a href="https://x.com/zrt_219" target="_blank" rel="noopener noreferrer" class="social-link">
+                            <svg class="social-icon" viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M9.52 6.78 15.4 0h-1.39L8.9 5.9 4.82 0H.12l6.17 8.93L.12 16h1.39l5.4-6.2 4.31 6.2h4.7L9.52 6.78Zm-1.91 2.2-.63-.9L2.01 1.05h2.14l4.01 5.67.63.9 5.22 7.39h-2.14L7.61 8.98Z"></path>
+                            </svg>
+                            @zrt_219
+                        </a>
+                        <a href="https://kick.com/zrt-219" target="_blank" rel="noopener noreferrer" class="social-link">
+                            <svg class="social-icon" viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M2 2h4.1v4.25h1.75L10.35 2H15l-3.95 6.05L15 14h-4.7L7.85 9.85H6.1V14H2V2Z"></path>
+                            </svg>
+                            Kick
+                        </a>
+                        <a href="https://substack.com/@zrt1" target="_blank" rel="noopener noreferrer" class="social-link">
+                            <svg class="social-icon" viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M2.5 1.5h11v1.8h-11V1.5Zm0 3.1h11v1.8h-11V4.6Zm0 3.1h11v6.8L8 11.35 2.5 14.5V7.7Z"></path>
+                            </svg>
+                            Substack
+                        </a>
+                        <a href="mailto:zpeace11@gmail.com" class="social-link">
+                            <svg class="social-icon" viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M1.5 2.75h13A1.5 1.5 0 0 1 16 4.25v7.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 11.75v-7.5a1.5 1.5 0 0 1 1.5-1.5Zm.38 1.5 5.25 4.19c.51.41 1.23.41 1.74 0l5.25-4.19H1.88Zm12.62 1.3-4.7 3.75a2.9 2.9 0 0 1-3.6 0L1.5 5.55v6.2h13v-6.2Z"></path>
+                            </svg>
+                            Email
+                        </a>
+                    </div>
+                    <div class="language-badges" aria-label="Languages and systems represented in this evidence workspace">
+                        <span class="language-badge lang-js">JavaScript</span>
+                        <span class="language-badge lang-css">CSS</span>
+                        <span class="language-badge lang-html">HTML</span>
+                        <span class="language-badge lang-python">Python</span>
+                        <span class="language-badge lang-ts">TypeScript</span>
+                        <span class="language-badge lang-solidity">Solidity</span>
+                        <span class="language-badge lang-shell">Shell</span>
+                        <span class="language-badge lang-md">Markdown</span>
+                    </div>
                 </div>
             </div>
             <div class="header-right">
                 <div class="stats-strip">
                     <div class="stat-box">
-                        <span class="label">Primary Target</span>
+                        <span class="label">Portfolio Surface</span>
                         <strong class="value highlight-blue">Zhane Grey Portfolio</strong>
                     </div>
                     <div class="stat-box">
-                        <span class="label">Ingest Posture</span>
+                        <span class="label">Claim Gate</span>
                         <strong class="value highlight-green" id="postureLabel">Strict Ingress</strong>
                     </div>
                     <div class="stat-box">
-                        <span class="label">System State</span>
+                        <span class="label">Demo State</span>
                         <strong class="value pulse-dot" id="systemState">Online / Idle</strong>
                     </div>
                 </div>
@@ -74,7 +133,7 @@
         <main class="dashboard-grid">
             
             <!-- LEFT PANEL: Navigation & Diagram Selection -->
-            <aside class="panel nav-panel glassmorphic" data-tooltip="Pick one subsystem at a time. This rail keeps the story organized: doctrine, daily refresh pipeline, and backup/export loop.">
+            <aside class="panel nav-panel glassmorphic" role="navigation" aria-label="Core subsystem map selector" data-tooltip="Pick one subsystem at a time. This rail keeps the story organized: doctrine, daily refresh pipeline, and backup/export loop.">
                 <div class="panel-header">
                     <span class="kicker">Core Subsystems</span>
                     <h2>Interactive Map Selector</h2>
@@ -82,7 +141,7 @@
                 <p class="panel-note">Use the left rail as the chapter index. 01 opens the doctrine map, 02 shifts to the daily refresh pipeline, and 03 shows the backup and export loop.</p>
                 
                 <div class="selector-stack">
-                    <button class="selector-card active" id="btn-doctrine" data-diagram="doctrine">
+                    <button class="selector-card active" id="btn-doctrine" data-diagram="doctrine" aria-pressed="true">
                         <div class="card-num">01</div>
                         <div class="card-content">
                             <h3>Core Verification Doctrine</h3>
@@ -91,7 +150,7 @@
                         <span class="active-indicator"></span>
                     </button>
 
-                    <button class="selector-card" id="btn-pipeline" data-diagram="pipeline">
+                    <button class="selector-card" id="btn-pipeline" data-diagram="pipeline" aria-pressed="false">
                         <div class="card-num">02</div>
                         <div class="card-content">
                             <h3>3-Agent Daily Refresh Pipeline</h3>
@@ -100,7 +159,7 @@
                         <span class="active-indicator"></span>
                     </button>
 
-                    <button class="selector-card" id="btn-workflow" data-diagram="workflow">
+                    <button class="selector-card" id="btn-workflow" data-diagram="workflow" aria-pressed="false">
                         <div class="card-num">03</div>
                         <div class="card-content">
                             <h3>Self-Updating Refresh Loop</h3>
@@ -129,14 +188,7 @@
                         <h2 id="stageTitle">Core Verification Doctrine</h2>
                     </div>
                 <div class="badge-row">
-                    <!-- Diagram Contrast Theme Toggle -->
-                    <div class="theme-toggle-wrapper" style="display: flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 0.25rem 0.5rem; border-radius: 6px;">
-                        <span class="theme-label" style="font-size: 0.68rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.03em; user-select: none;">Blueprint Mode</span>
-                        <label class="switch" style="position: relative; display: inline-block; width: 28px; height: 16px;">
-                            <input type="checkbox" id="diagramThemeToggle" checked style="opacity: 0; width: 0; height: 0;">
-                            <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .3s; border-radius: 34px; border: 1px solid var(--border-color);"></span>
-                        </label>
-                    </div>
+                    <span class="pill-badge">White Diagram Mode</span>
                     <span class="pill-badge" id="badge-tech">XeLaTeX</span>
                     <span class="pill-badge" id="badge-scope">Governance</span>
                 </div>
@@ -144,26 +196,14 @@
 
                 <div class="stage-summary">
                     <div class="stage-summary-copy">
-                        <span class="kicker">How To Read This Map</span>
-                        <p>The diagram is the index, not the whole proof. Use the proof drawer for code, and drag the console into the hero when you want the live log beside the doctrine map.</p>
+                        <span class="kicker">Map Guide</span>
+                        <p>Read the map in one pass: choose a node, inspect the focus panel, then open source proof.</p>
                     </div>
-                    <div class="stage-pill-grid" aria-label="Stage summary">
-                        <div class="stage-pill-card">
-                            <span>01</span>
-                            <strong>Ingest</strong>
-                            <em>logs, commits, files</em>
-                        </div>
-                        <div class="stage-pill-card">
-                            <span>02</span>
-                            <strong>Gate</strong>
-                            <em>redact, grade, keep/remove</em>
-                        </div>
-                        <div class="stage-pill-card">
-                            <span>03</span>
-                            <strong>Publish</strong>
-                            <em>ATS, diary, report</em>
-                        </div>
-                    </div>
+                    <ol class="map-read-steps" aria-label="How to use the map">
+                        <li><span>1</span><strong>Click Node</strong></li>
+                        <li><span>2</span><strong>Read Focus</strong></li>
+                        <li><span>3</span><strong>Open Proof</strong></li>
+                    </ol>
                 </div>
 
                 <div class="viewer-frame" data-tooltip="Click the numbered connector nodes to change the active proof focus. The line shows what each number maps to without covering the diagram.">
@@ -191,8 +231,43 @@
                         </div>
                         <!-- PULSING ACTION BUTTON FOR THE SOURCE DRAWER -->
                         <button id="btnInspectCodeProof" class="btn-inspect-proof" style="display: flex; align-items: center; gap: 0.4rem; background: rgba(59, 130, 246, 0.12); color: var(--color-blue); border: 1px solid rgba(59, 130, 246, 0.35); padding: 0.45rem 0.9rem; border-radius: 6px; font-family: var(--font-sans); font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 12px rgba(59, 130, 246, 0.15);">
-                            🔍 View Source Code Proof
+                            🔍 View Evidence Excerpt
                         </button>
+                    </div>
+                </div>
+
+                <div class="terminal-container stage-terminal" id="content-terminal" aria-label="Main execution terminal">
+                    <div class="terminal-header" id="terminalHeader">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span class="drag-handle" title="Drag to float terminal">::</span>
+                            <span class="term-title">main_evidence_execution.log</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <button class="btn-dock btn-float" id="btnFloatTerminal" title="Float main execution log">Float</button>
+                            <button class="btn-dock" id="btnDockTerminal" style="display: none;" title="Pin under Active Node Focus">Pin</button>
+                            <div class="term-dots">
+                                <span class="dot red"></span>
+                                <span class="dot yellow"></span>
+                                <span class="dot green"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="terminal-body" id="terminalLogs">
+                        <div class="log-line system">[SYSTEM] Main evidence execution log linked. Ingress ready.</div>
+                        <div class="log-line info">[INFO] Node focus changes and refresh simulations stream here.</div>
+                    </div>
+                    <div class="terminal-suggestions" id="terminalSuggestions">
+                        <span class="suggestions-label">Main actions:</span>
+                        <button class="suggestion-chip" data-cmd="git status">git status</button>
+                        <button class="suggestion-chip" data-cmd="git diff">git diff</button>
+                        <button class="suggestion-chip" data-cmd="/help">/help</button>
+                        <button class="suggestion-chip" data-cmd="/float">/float</button>
+                        <button class="suggestion-chip" data-cmd="cat agents.md">cat agents.md</button>
+                        <button class="suggestion-chip" data-cmd="vercel deploy">vercel deploy</button>
+                    </div>
+                    <div class="terminal-input-row">
+                        <span class="terminal-prompt">$</span>
+                        <input type="text" id="terminalPromptInput" placeholder="Main log command... type '/help' for 60+ commands" autocomplete="off" spellcheck="false">
                     </div>
                 </div>
             </section>
@@ -225,14 +300,15 @@
                 </div>
 
                 <!-- TAB 1 CONTENT: Terminal Log Box -->
-                <div class="terminal-container tab-content active" id="content-terminal">
-                    <div class="terminal-header" id="terminalHeader">
+                <div class="terminal-container side-terminal tab-content active" id="content-side-terminal" aria-label="Side chat terminal">
+                    <div class="terminal-header" id="sideTerminalHeader">
                         <div style="display: flex; align-items: center; gap: 0.5rem;">
                             <span class="drag-handle" title="Drag to hero area">⋮⋮</span>
-                            <span class="term-title">system_refresher_agent.log</span>
+                            <span class="side-terminal-mark" aria-hidden="true">/</span>
+                            <span class="term-title">side_refresher_chat.log</span>
                         </div>
                         <div style="display: flex; align-items: center; gap: 0.5rem;">
-                            <button class="btn-dock" id="btnDockTerminal" style="display: none;" title="Dock back to sidebar">⤵ Dock</button>
+                            <span class="side-chat-badge">/side ready</span>
                             <div class="term-dots">
                                 <span class="dot red"></span>
                                 <span class="dot yellow"></span>
@@ -240,20 +316,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="terminal-body" id="terminalLogs">
-                        <div class="log-line system">[SYSTEM] Dashboard console linked. Ingress ready.</div>
-                        <div class="log-line info">[INFO] Select a node on the diagram or click 'Run Refresh Simulation' above.</div>
+                    <div class="terminal-body" id="sideTerminalLogs">
+                        <div class="log-line system">[SIDE] Refresher side chat online.</div>
+                        <div class="log-line info">[INFO] Use this while the main execution terminal is busy. Try /help qa, /side, or evidence scan.</div>
                     </div>
-                    <div class="terminal-suggestions" id="terminalSuggestions">
-                        <span class="suggestions-label">Quick actions:</span>
-                        <button class="suggestion-chip" data-cmd="git status">git status</button>
-                        <button class="suggestion-chip" data-cmd="git diff">git diff</button>
-                        <button class="suggestion-chip" data-cmd="cat agents.md">cat agents.md</button>
-                        <button class="suggestion-chip" data-cmd="vercel deploy">vercel deploy</button>
+                    <div class="terminal-suggestions" id="sideTerminalSuggestions">
+                        <span class="suggestions-label">Side chat:</span>
+                        <button class="side-suggestion-chip" data-cmd="/side">/side</button>
+                        <button class="side-suggestion-chip" data-cmd="/help qa">/help qa</button>
+                        <button class="side-suggestion-chip" data-cmd="evidence scan">evidence scan</button>
+                        <button class="side-suggestion-chip" data-cmd="qa accessibility">qa accessibility</button>
                     </div>
                     <div class="terminal-input-row">
                         <span class="terminal-prompt">$</span>
-                        <input type="text" id="terminalPromptInput" placeholder="Type 'help' or command... (e.g. 'git status', 'vercel deploy')" autocomplete="off" spellcheck="false">
+                        <input type="text" id="sideTerminalPromptInput" placeholder="Side chat command... '/side' keeps this rail separate" autocomplete="off" spellcheck="false">
                     </div>
                 </div>
 

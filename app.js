@@ -200,6 +200,8 @@ const focusNodeTitle = document.getElementById("focusNodeTitle");
 const focusNodeDescription = document.getElementById("focusNodeDescription");
 const focusNodeMetrics = document.getElementById("focusNodeMetrics");
 const terminalLogs = document.getElementById("terminalLogs");
+const sideTerminalLogs = document.getElementById("sideTerminalLogs");
+const sideTerminalPromptInput = document.getElementById("sideTerminalPromptInput");
 const btnRefreshSim = document.getElementById("btnRefreshSim");
 const verificationRatio = document.getElementById("verificationRatio");
 const verificationProgressBar = document.getElementById("verificationProgressBar");
@@ -220,7 +222,12 @@ const tourStepDots = document.getElementById("tourStepDots");
 const tabTerminalBtn = document.getElementById("tab-terminal");
 const tabReportBtn = document.getElementById("tab-report");
 const contentTerminal = document.getElementById("content-terminal");
+const contentSideTerminal = document.getElementById("content-side-terminal");
 const contentReport = document.getElementById("content-report");
+const btnFloatTerminal = document.getElementById("btnFloatTerminal");
+const btnDockTerminalGlobal = document.getElementById("btnDockTerminal");
+const terminalHomeParent = contentTerminal?.parentNode || null;
+const terminalHomeNextSibling = contentTerminal?.nextSibling || null;
 
 const selectRedact = document.getElementById("redactSelect");
 const btnRedactScan = document.getElementById("btnRedactScan");
@@ -238,6 +245,7 @@ let typingSimulationActive = false;
 let loopIteration = 0;
 let activeProofKey = null; // Track currently inspectable code block key
 let activeTourStep = 0;
+let commandOutputLogs = null;
 
 const tourSteps = [
     {
@@ -262,7 +270,7 @@ const tourSteps = [
         kicker: "Step 4",
         title: "Inspect source-code proof",
         body: "The proof drawer is the important employer-facing behavior. It links the visual story back to implementation excerpts instead of leaving the dashboard as a mockup.",
-        callout: "Use 'View Source Code Proof' after selecting a node."
+        callout: "Use 'View Evidence Excerpt' after selecting a node."
     },
     {
         kicker: "Step 5",
@@ -1073,7 +1081,7 @@ function renderHotspots(diagramKey) {
     if (!useInlineDiagramNodes) {
         hotspotLayer.appendChild(connectorSvg);
     }
-    
+
     hotspots.forEach((spot, index) => {
         const railX = 2.5;
         const hotspotX = useInlineDiagramNodes ? spot.x : railX;
@@ -1106,6 +1114,7 @@ function renderHotspots(diagramKey) {
         hsElement.style.top = `${spot.y}%`;
         hsElement.setAttribute("data-index", index);
         hsElement.setAttribute("aria-label", `Focus ${spot.title}`);
+        hsElement.setAttribute("aria-pressed", index === 0 ? "true" : "false");
         
         // Inject Numbered waypoint label (01, 02, etc.) matching diagram circles
         hsElement.innerHTML = `<span class="hotspot-num">0${index + 1}</span><span class="hotspot-label">${escapeHTML(label)}</span>`;
@@ -1122,23 +1131,29 @@ function renderHotspots(diagramKey) {
 function selectHotspot(diagramKey, index) {
     // Remove active state from all hotspots in layer
     const allSpots = hotspotLayer.querySelectorAll(".hotspot");
-    allSpots.forEach(s => s.classList.remove("active"));
+    allSpots.forEach(s => {
+        s.classList.remove("active");
+        s.setAttribute("aria-pressed", "false");
+    });
     hotspotLayer.querySelectorAll(".hotspot-connector").forEach(line => line.classList.remove("active"));
-    
+
     // Set clicked hotspot to active
     const activeSpot = hotspotLayer.querySelector(`.hotspot[data-index="${index}"]`);
-    if (activeSpot) activeSpot.classList.add("active");
+    if (activeSpot) {
+        activeSpot.classList.add("active");
+        activeSpot.setAttribute("aria-pressed", "true");
+    }
     const activeConnector = hotspotLayer.querySelector(`.hotspot-connector[data-index="${index}"]`);
     if (activeConnector) activeConnector.classList.add("active");
-    
+
     const hotspots = hotspotsData[diagramKey];
     if (!hotspots || !hotspots[index]) return;
     const spotInfo = hotspots[index];
-    
+
     // Update central details focus panel
     focusNodeTitle.textContent = spotInfo.title;
     focusNodeDescription.textContent = spotInfo.description;
-    
+
     // Render metrics list
     focusNodeMetrics.innerHTML = "";
     Object.entries(spotInfo.metrics).forEach(([key, val]) => {
@@ -1201,16 +1216,130 @@ function selectHotspot(diagramKey, index) {
 }
 
 // 5. Append lines to technical logs terminal
-function appendTerminalLines(lines, styleClass) {
+function activeTerminalLogs(targetLogs = null) {
+    return targetLogs || commandOutputLogs || terminalLogs;
+}
+
+function removeTerminalEmptyState(targetLogs = null) {
+    const logs = activeTerminalLogs(targetLogs);
+    const emptyState = logs?.querySelector(".terminal-empty-state");
+    if (emptyState) emptyState.remove();
+}
+
+function ensureTerminalEmptyState(targetLogs = null) {
+    const logs = activeTerminalLogs(targetLogs);
+    if (!logs) return;
+    if (logs.querySelector(".log-line") || logs.querySelector(".terminal-empty-state")) return;
+
+    const emptyState = document.createElement("div");
+    emptyState.className = "terminal-empty-state";
+    emptyState.innerHTML = `
+        <span class="empty-kicker">Agent Log Empty</span>
+        <strong>No live events are loaded.</strong>
+        <p>Run <code>refresh</code>, type <code>/help</code>, or use <code>/seed</code> to restore starter context.</p>
+    `;
+    logs.appendChild(emptyState);
+}
+
+function clearTerminalLog(targetLogs = null) {
+    const logs = activeTerminalLogs(targetLogs);
+    if (!logs) return;
+    logs.replaceChildren();
+    ensureTerminalEmptyState(logs);
+}
+
+function appendTerminalLines(lines, styleClass, targetLogs = null) {
+    const logs = activeTerminalLogs(targetLogs);
+    if (!logs) return;
+    removeTerminalEmptyState(logs);
     lines.forEach(line => {
         const logLine = document.createElement("div");
         logLine.classList.add("log-line", styleClass);
         logLine.textContent = line;
-        terminalLogs.appendChild(logLine);
+        logs.appendChild(logLine);
     });
     
     // Auto-scroll terminal to bottom
-    terminalLogs.scrollTop = terminalLogs.scrollHeight;
+    logs.scrollTop = logs.scrollHeight;
+}
+
+function setTerminalControlsFloating(isFloating) {
+    if (btnDockTerminalGlobal) btnDockTerminalGlobal.style.display = isFloating ? "block" : "none";
+    if (btnFloatTerminal) btnFloatTerminal.style.display = isFloating ? "none" : "block";
+}
+
+function clampElementPosition(element, left, top) {
+    const margin = 12;
+    const width = element.offsetWidth || 680;
+    const height = element.offsetHeight || 420;
+    const maxLeft = Math.max(margin, window.innerWidth - width - margin);
+    const maxTop = Math.max(margin, window.innerHeight - height - margin);
+    return {
+        left: Math.min(Math.max(left, margin), maxLeft),
+        top: Math.min(Math.max(top, margin), maxTop)
+    };
+}
+
+function reclampFloatingTerminal() {
+    if (!contentTerminal?.classList.contains("undocked")) return;
+    const rect = contentTerminal.getBoundingClientRect();
+    const nextPos = clampElementPosition(contentTerminal, rect.left, rect.top);
+    contentTerminal.style.left = `${nextPos.left}px`;
+    contentTerminal.style.top = `${nextPos.top}px`;
+}
+
+function setTerminalActiveTab() {
+    contentTerminal?.classList.add("active");
+}
+
+function floatTerminalLog() {
+    if (!contentTerminal) return;
+    const rect = contentTerminal.getBoundingClientRect();
+    const startLeft = rect.width ? rect.left : window.innerWidth - 700;
+    const startTop = rect.height ? rect.top : 120;
+
+    contentTerminal.classList.remove("hero-snapped");
+    contentTerminal.classList.add("undocked", "active");
+    contentTerminal.style.width = "min(680px, calc(100vw - 2rem))";
+    contentTerminal.style.height = "min(430px, calc(100vh - 2rem))";
+    document.body.appendChild(contentTerminal);
+
+    const nextPos = clampElementPosition(contentTerminal, startLeft, startTop);
+    contentTerminal.style.left = `${nextPos.left}px`;
+    contentTerminal.style.top = `${nextPos.top}px`;
+    setTerminalActiveTab();
+    setTerminalControlsFloating(true);
+    ensureTerminalEmptyState();
+}
+
+function trayTerminalLog() {
+    const visualizerPanel = document.querySelector(".stage-panel");
+    if (!contentTerminal || !visualizerPanel) return;
+
+    contentTerminal.classList.add("hero-snapped", "active");
+    contentTerminal.classList.remove("undocked");
+    contentTerminal.style.left = "";
+    contentTerminal.style.top = "";
+    contentTerminal.style.width = "";
+    contentTerminal.style.height = "";
+    visualizerPanel.appendChild(contentTerminal);
+    setTerminalActiveTab();
+    setTerminalControlsFloating(true);
+    ensureTerminalEmptyState();
+}
+
+function dockTerminalLog() {
+    if (!contentTerminal || !terminalHomeParent) return;
+
+    contentTerminal.classList.remove("undocked", "hero-snapped");
+    contentTerminal.style.left = "";
+    contentTerminal.style.top = "";
+    contentTerminal.style.width = "";
+    contentTerminal.style.height = "";
+    terminalHomeParent.insertBefore(contentTerminal, terminalHomeNextSibling);
+    setTerminalActiveTab();
+    setTerminalControlsFloating(false);
+    ensureTerminalEmptyState();
 }
 
 // 6. Switch main active diagram selector
@@ -1222,10 +1351,14 @@ function switchDiagram(diagramKey) {
     // Update selectors class list
     document.querySelectorAll(".selector-card").forEach(card => {
         card.classList.remove("active");
+        card.setAttribute("aria-pressed", "false");
     });
     
     const activeCard = document.querySelector(`.selector-card[data-diagram="${diagramKey}"]`);
-    if (activeCard) activeCard.classList.add("active");
+    if (activeCard) {
+        activeCard.classList.add("active");
+        activeCard.setAttribute("aria-pressed", "true");
+    }
     
     // Fade out active diagram and replace source
     activeDiagramImg.style.opacity = "0.2";
@@ -1273,21 +1406,14 @@ function switchDiagram(diagramKey) {
 // Tab Selector Switch Function
 function switchTab(target) {
     if (target === "terminal") {
-        if (contentTerminal && (contentTerminal.classList.contains("undocked") || contentTerminal.classList.contains("hero-snapped"))) {
-            const btnDockTerminal = document.getElementById("btnDockTerminal");
-            if (btnDockTerminal) {
-                btnDockTerminal.click();
-                return;
-            }
-        }
         tabTerminalBtn.classList.add("active");
         tabReportBtn.classList.remove("active");
-        contentTerminal.classList.add("active");
+        contentSideTerminal?.classList.add("active");
         contentReport.classList.remove("active");
     } else {
         tabTerminalBtn.classList.remove("active");
         tabReportBtn.classList.add("active");
-        contentTerminal.classList.remove("active");
+        contentSideTerminal?.classList.remove("active");
         contentReport.classList.add("active");
     }
 }
@@ -1329,7 +1455,8 @@ function runRefreshCycle(isLoopMode = false) {
     postureLabel.classList.remove("highlight-green");
     postureLabel.style.color = "var(--color-gold)";
     
-    terminalLogs.innerHTML = "";
+    terminalLogs.replaceChildren();
+    appendTerminalLines(["[SYSTEM] Main execution terminal reserved for refresh stream..."], "system", terminalLogs);
     verificationRatio.textContent = "Calibrating...";
     verificationProgressBar.style.width = "10%";
     
@@ -1634,10 +1761,131 @@ function updateGapsIntegrity() {
     }
 }
 
+const terminalCommandCatalog = [
+    { cmd: "/help", category: "Core", desc: "Show all console commands", aliases: ["help"] },
+    { cmd: "/clear", category: "Core", desc: "Clear the agent log and show empty state", aliases: ["clear"] },
+    { cmd: "/seed", category: "Core", desc: "Restore starter log context", aliases: ["seed"] },
+    { cmd: "/empty", category: "Core", desc: "Preview the empty agent-log replacement", aliases: ["empty"] },
+    { cmd: "/float", category: "Core", desc: "Float the agent log above the dashboard", aliases: ["float"] },
+    { cmd: "/dock", category: "Core", desc: "Dock the agent log back to the sidebar", aliases: ["dock"] },
+    { cmd: "/tray", category: "Core", desc: "Snap the agent log into the stage tray", aliases: ["tray"] },
+    { cmd: "/side", category: "Core", desc: "Explain the independent right-rail side chat", aliases: ["side"] },
+    { cmd: "/status", category: "Core", desc: "Show simulated system status", aliases: ["status"] },
+    { cmd: "/about", category: "Core", desc: "Explain what this dashboard proves", aliases: ["about"] },
+    { cmd: "/tour", category: "Core", desc: "Restart the six-step first-timer tour", aliases: ["tour"] },
+    { cmd: "git status", category: "Git", desc: "Query local evidence git status" },
+    { cmd: "git diff", category: "Git", desc: "Inspect simulated proof metric deltas" },
+    { cmd: "git log", category: "Git", desc: "Show recent dashboard commit summary" },
+    { cmd: "git branch", category: "Git", desc: "Show active branch" },
+    { cmd: "git remote", category: "Git", desc: "Show proof repository remote" },
+    { cmd: "git proof", category: "Git", desc: "Summarize repo proof posture" },
+    { cmd: "git files", category: "Git", desc: "List key changed dashboard files" },
+    { cmd: "evidence count", category: "Evidence", desc: "Show live corpus count summary" },
+    { cmd: "evidence scan", category: "Evidence", desc: "Simulate evidence scan" },
+    { cmd: "evidence index", category: "Evidence", desc: "Show evidence index target" },
+    { cmd: "evidence gaps", category: "Evidence", desc: "Show unresolved proof gaps" },
+    { cmd: "evidence ledger", category: "Evidence", desc: "Show claim ledger status" },
+    { cmd: "evidence hashes", category: "Evidence", desc: "Show checksum posture" },
+    { cmd: "evidence report", category: "Evidence", desc: "Open daily report summary" },
+    { cmd: "evidence daily", category: "Evidence", desc: "Show daily refresh artifact status" },
+    { cmd: "evidence missing", category: "Evidence", desc: "Show missing-proof queue" },
+    { cmd: "evidence resume", category: "Evidence", desc: "Show resume-safe proof status" },
+    { cmd: "scribe scan", category: "Agents", desc: "Run RAG-SCRIBE simulated scan" },
+    { cmd: "scribe delta", category: "Agents", desc: "Show detected file deltas" },
+    { cmd: "atlas verify", category: "Agents", desc: "Run RAG-ATLAS verification summary" },
+    { cmd: "atlas grade", category: "Agents", desc: "Show confidence grading rules" },
+    { cmd: "forge export", category: "Agents", desc: "Run RAG-FORGE export summary" },
+    { cmd: "forge packet", category: "Agents", desc: "Show application packet output" },
+    { cmd: "agents status", category: "Agents", desc: "Show all agent lanes" },
+    { cmd: "agents handoff", category: "Agents", desc: "Show SCRIBE -> ATLAS -> FORGE handoff" },
+    { cmd: "agents reset", category: "Agents", desc: "Reset simulated agent state" },
+    { cmd: "agents trace", category: "Agents", desc: "Show execution trace timeline" },
+    { cmd: "redact scan", category: "Security", desc: "Simulate credential redaction scan" },
+    { cmd: "redact demo", category: "Security", desc: "Run redaction preview message" },
+    { cmd: "secrets audit", category: "Security", desc: "Show secret-leak audit status" },
+    { cmd: "backup status", category: "Security", desc: "Show L1/L2/L3 backup posture" },
+    { cmd: "backup l1", category: "Security", desc: "Show L1 working snapshot status" },
+    { cmd: "backup l2", category: "Security", desc: "Show L2 immutable zip status" },
+    { cmd: "backup l3", category: "Security", desc: "Show L3 portable recovery status" },
+    { cmd: "restore plan", category: "Security", desc: "Show restore instructions status" },
+    { cmd: "vercel deploy", category: "Deploy", desc: "Preview simulated deploy output; no deployment is executed" },
+    { cmd: "vercel inspect", category: "Deploy", desc: "Show deployment inspection URL pattern" },
+    { cmd: "qa audit", category: "QA", desc: "Run dashboard QA checklist" },
+    { cmd: "qa visual", category: "QA", desc: "Check visual hierarchy" },
+    { cmd: "qa accessibility", category: "QA", desc: "Check colorblind-readable states" },
+    { cmd: "qa mobile", category: "QA", desc: "Check responsive layout notes" },
+    { cmd: "qa perf", category: "QA", desc: "Show static-site performance posture" },
+    { cmd: "qa links", category: "QA", desc: "Check public link list" },
+    { cmd: "resume compile", category: "Docs", desc: "Simulate ATS resume compile" },
+    { cmd: "resume ats", category: "Docs", desc: "Show ATS text status" },
+    { cmd: "diary open", category: "Docs", desc: "Show Codex diary status" },
+    { cmd: "packet status", category: "Docs", desc: "Show application packet status" },
+    { cmd: "readme proof", category: "Docs", desc: "Show README employer proof status" },
+    { cmd: "github repo", category: "Docs", desc: "Show repository URL" },
+    { cmd: "refresh", category: "Simulation", desc: "Run one simulated refresh" },
+    { cmd: "loop", category: "Simulation", desc: "Toggle refresh loop mode" },
+    { cmd: "stop loop", category: "Simulation", desc: "Stop refresh loop mode" },
+    { cmd: "sim fast", category: "Simulation", desc: "Show fast-run simulation note" },
+    { cmd: "sim slow", category: "Simulation", desc: "Show full-run simulation note" },
+    { cmd: "node 1", category: "Navigation", desc: "Select first architecture node" },
+    { cmd: "node 2", category: "Navigation", desc: "Select second architecture node" },
+    { cmd: "node 3", category: "Navigation", desc: "Select third architecture node" },
+    { cmd: "source proof", category: "Navigation", desc: "Open source-code proof drawer" },
+    { cmd: "drawer close", category: "Navigation", desc: "Close source-code proof drawer" },
+    { cmd: "graph help", category: "Navigation", desc: "Explain velocity graph hover behavior" },
+    { cmd: "cat agents.md", category: "Docs", desc: "Display governance excerpt" }
+];
+
+function normalizeCommand(cmdText) {
+    const normalized = cmdText.trim().toLowerCase().replace(/\s+/g, " ");
+    return normalized.startsWith("/") ? normalized.slice(1) : normalized;
+}
+
+function findTerminalCommand(cleanCmd) {
+    return terminalCommandCatalog.find(entry => {
+        const names = [entry.cmd, ...(entry.aliases || [])].map(normalizeCommand);
+        return names.includes(cleanCmd);
+    });
+}
+
+function renderTerminalHelp(filterText = "") {
+    const normalizedFilter = normalizeCommand(filterText);
+    const lines = [
+        "--- Zhane Grey Refresher CLI: 60+ Supported Commands ---",
+        "Tip: every command accepts slash or plain form. Example: /qa audit or qa audit."
+    ];
+    const categories = [...new Set(terminalCommandCatalog.map(entry => entry.category))];
+    categories.forEach(category => {
+        if (normalizedFilter && normalizeCommand(category) !== normalizedFilter) return;
+        lines.push("");
+        lines.push(`[${category}]`);
+        terminalCommandCatalog
+            .filter(entry => entry.category === category)
+            .forEach(entry => lines.push(`  ${entry.cmd.padEnd(18)} - ${entry.desc}`));
+    });
+    if (lines.length === 2) {
+        lines.push(`[HELP] No category matched '${filterText}'. Try /help qa, /help evidence, /help agents, or /help security.`);
+    }
+    appendTerminalLines(lines, "info");
+}
+
+function runGenericCatalogCommand(entry) {
+    appendTerminalLines([
+        `[CLI] ${entry.cmd}: ${entry.desc}.`,
+        `[SYSTEM] Simulated command acknowledged. Use /help to inspect the full command surface.`
+    ], "info");
+}
+
 // Terminal Mock CLI Parser
-function handleTerminalCommand(cmdText) {
-    const cleanCmd = cmdText.trim().toLowerCase();
-    if (!cleanCmd) return;
+function handleTerminalCommand(cmdText, context = {}) {
+    const previousOutputLogs = commandOutputLogs;
+    commandOutputLogs = context.logs || terminalLogs;
+    const isSideTerminalCommand = commandOutputLogs === sideTerminalLogs;
+    const cleanCmd = normalizeCommand(cmdText);
+    if (!cleanCmd) {
+        commandOutputLogs = previousOutputLogs;
+        return;
+    }
 
     // Push command into recall history stack
     commandHistory.push(cmdText);
@@ -1646,24 +1894,58 @@ function handleTerminalCommand(cmdText) {
     // Log user command exactly like a unix CLI input
     appendTerminalLines([`$ ${cmdText}`], "success");
 
-    const inputEl = document.getElementById("terminalPromptInput");
+    const inputEl = context.input || document.getElementById("terminalPromptInput");
     if (inputEl) inputEl.value = "";
 
     // Parse command routing
+    const catalogEntry = findTerminalCommand(cleanCmd);
+
     if (cleanCmd === "help") {
-        appendTerminalLines([
-            "--- Zhane Grey's Refresher CLI - Supported Commands ---",
-            "  help          - Show this list of available commands",
-            "  clear         - Clear the log console screen",
-            "  git status    - Query the local evidence git status",
-            "  git diff      - Inspect the recent deltas in data/codexStats.ts",
-            "  vercel deploy - Simulate redeploying the dashboard to Vercel",
-            "  cat agents.md - Display Zhane Grey's prime directive from AGENTS.md",
-            "  refresh       - Run a single automated workspace refresh cycle",
-            "  loop          - Toggle the infinite 11s Refresh Loop Mode"
-        ], "info");
+        renderTerminalHelp();
+    } else if (cleanCmd.startsWith("help ")) {
+        renderTerminalHelp(cleanCmd.replace(/^help\s+/, ""));
     } else if (cleanCmd === "clear") {
-        terminalLogs.innerHTML = "";
+        clearTerminalLog();
+    } else if (cleanCmd === "seed") {
+        appendTerminalLines([
+            "[SYSTEM] Dashboard console linked. Ingress ready.",
+            "[INFO] Select a node on the diagram, type /help, float the log, or run refresh."
+        ], "system");
+    } else if (cleanCmd === "empty") {
+        clearTerminalLog();
+    } else if (cleanCmd === "float") {
+        if (isSideTerminalCommand) {
+            appendTerminalLines(["[SIDE] Layout commands are reserved for the main execution terminal. Use the main prompt for /float."], "warning");
+        } else {
+            floatTerminalLog();
+            appendTerminalLines(["[SYSTEM] Agent log floated above the dashboard."], "system");
+        }
+    } else if (cleanCmd === "dock") {
+        if (isSideTerminalCommand) {
+            appendTerminalLines(["[SIDE] Dock ignored here; the side chat stays pinned in the Refresher Log rail."], "warning");
+        } else {
+            dockTerminalLog();
+            appendTerminalLines(["[SYSTEM] Agent log pinned under Active Node Focus."], "system");
+        }
+    } else if (cleanCmd === "tray") {
+        if (isSideTerminalCommand) {
+            appendTerminalLines(["[SIDE] Tray ignored here; main execution layout remains unchanged."], "warning");
+        } else {
+            trayTerminalLog();
+            appendTerminalLines(["[SYSTEM] Agent log snapped into the stage tray."], "system");
+        }
+    } else if (cleanCmd === "side") {
+        appendTerminalLines([
+            "[SIDE] The right-rail Refresher Log is now an independent side chat.",
+            "[SIDE] Main execution logs continue under Active Node Focus while this panel accepts /help, evidence, QA, and doc commands."
+        ], "info");
+    } else if (cleanCmd === "vercel deploy") {
+        appendTerminalLines([
+            "[SIMULATED] Vercel deployment preview requested.",
+            "[SIMULATED] Inspecting static dashboard requirements...",
+            "[SIMULATED] No live deployment is executed from the browser console.",
+            "[INFO] Public demo target: https://zhane-grey-evidence-dashboard.vercel.app"
+        ], "success");
     } else if (cleanCmd === "git status") {
         appendTerminalLines([
             "On branch main",
@@ -1690,14 +1972,6 @@ function handleTerminalCommand(cmdText) {
             "+  lastRefreshedAt: \"2026-05-22T00:25:00Z\",",
             " };"
         ], "info");
-    } else if (cleanCmd === "vercel deploy") {
-        appendTerminalLines([
-            "Vercel CLI 34.2.0",
-            "🔍 Inspecting build requirements...",
-            "⚙️ Deploying zhane-grey-evidence-dashboard (production)...",
-            "✅ Production Deployment URL: https://zhane-grey-evidence-dashboard.vercel.app",
-            "🎉 Deployed successfully! Build complete in 1.4s."
-        ], "success");
     } else if (cleanCmd === "cat agents.md") {
         appendTerminalLines([
             "--- AGENTS.md Core Governance Excerpt ---",
@@ -1722,11 +1996,31 @@ function handleTerminalCommand(cmdText) {
         }
     } else if (cleanCmd === "loop") {
         toggleLoopMode();
+    } else if (cleanCmd === "stop loop") {
+        if (loopModeActive) toggleLoopMode();
+        else appendTerminalLines(["[SYSTEM] Loop mode is already inactive."], "info");
+    } else if (cleanCmd.startsWith("node ")) {
+        const nodeIndex = Number(cleanCmd.split(" ")[1]) - 1;
+        const nodes = hotspotsData[currentSelectedDiagram] || [];
+        if (nodes[nodeIndex]) selectHotspot(currentSelectedDiagram, nodeIndex);
+        else appendTerminalLines([`[CLI-ERROR] Node ${nodeIndex + 1} is not available on this map.`], "error");
+    } else if (cleanCmd === "source proof") {
+        const cta = document.getElementById("btnInspectCodeProof");
+        if (cta?.style.display !== "none") cta.click();
+        else appendTerminalLines(["[SYSTEM] No source proof drawer is mapped to the active node."], "warning");
+    } else if (cleanCmd === "drawer close") {
+        closeCodeDrawer();
+        appendTerminalLines(["[SYSTEM] Source proof drawer closed."], "system");
+    } else if (cleanCmd === "tour") {
+        openTour(true);
+    } else if (catalogEntry) {
+        runGenericCatalogCommand(catalogEntry);
     } else {
         appendTerminalLines([
-            `[CLI-ERROR] Command '${cmdText}' unrecognized. Type 'help' to see valid operations.`
+            `[CLI-ERROR] Command '${cmdText}' unrecognized. Type '/help' to see 60+ valid operations.`
         ], "error");
     }
+    commandOutputLogs = previousOutputLogs;
 }
 
 // ----------------------------------------------------
@@ -2216,6 +2510,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    if (sideTerminalPromptInput && sideTerminalLogs) {
+        sideTerminalPromptInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                handleTerminalCommand(sideTerminalPromptInput.value, {
+                    logs: sideTerminalLogs,
+                    input: sideTerminalPromptInput
+                });
+            }
+        });
+    }
+
     // Wire up suggestion chips click listener with high-tech typing simulation
     document.querySelectorAll(".suggestion-chip").forEach(chip => {
         chip.addEventListener("click", () => {
@@ -2226,23 +2531,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Wire up Diagram Contrast Toggle (Blueprint Mode)
-    const themeToggle = document.getElementById("diagramThemeToggle");
-    const viewerFrame = document.querySelector(".viewer-frame");
-    if (themeToggle && viewerFrame) {
-        // Active dark blueprint by default
-        viewerFrame.classList.add("dark-blueprint");
-        
-        themeToggle.addEventListener("change", (e) => {
-            if (e.target.checked) {
-                viewerFrame.classList.add("dark-blueprint");
-                appendTerminalLines(["[SYSTEM] Visualizer Contrast altered: Premium Dark Blueprint Mode ENABLED."], "system");
-            } else {
-                viewerFrame.classList.remove("dark-blueprint");
-                appendTerminalLines(["[SYSTEM] Visualizer Contrast altered: Light Schematic Mode ENABLED."], "system");
+    document.querySelectorAll(".side-suggestion-chip").forEach(chip => {
+        chip.addEventListener("click", () => {
+            const cmd = chip.getAttribute("data-cmd");
+            if (cmd && sideTerminalLogs) {
+                handleTerminalCommand(cmd, {
+                    logs: sideTerminalLogs,
+                    input: sideTerminalPromptInput
+                });
             }
         });
-    }
+    });
 
     // High-tech character-by-character typing simulator helper
     function simulateCommandTyping(cmdText) {
@@ -2375,6 +2674,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const terminalHeader = document.getElementById("terminalHeader");
     const visualizerPanel = document.querySelector(".stage-panel");
     const btnDockTerminal = document.getElementById("btnDockTerminal");
+    const btnFloatTerminalLocal = document.getElementById("btnFloatTerminal");
     
     let isDraggingTerminal = false;
     let dragStartX = 0;
@@ -2397,6 +2697,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (terminalHeader && terminalContainer) {
         terminalHeader.addEventListener("mousedown", (e) => {
             if (e.target.closest('.btn-dock')) return; 
+            if (!e.target.closest(".drag-handle")) return;
             e.preventDefault(); // Prevent text selection/drag interference
             
             isDraggingTerminal = true;
@@ -2410,7 +2711,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 terminalContainer.classList.add("active");
                 if (tabTerminalBtn) tabTerminalBtn.classList.add("active");
                 if (tabReportBtn) tabReportBtn.classList.remove("active");
-                if (btnDockTerminal) btnDockTerminal.style.display = "block";
+                setTerminalControlsFloating(true);
             }
             
             // Move to body to avoid backdrop-filter containing block issues
@@ -2475,30 +2776,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 terminalContainer.style.top = "";
                 terminalContainer.style.width = "";
                 terminalContainer.style.height = "";
-                if (btnDockTerminal) btnDockTerminal.style.display = "block";
+                setTerminalControlsFloating(true);
                 // Append as an inline tray so the terminal does not cover the diagram.
                 visualizerPanel.appendChild(terminalContainer);
             }
         });
+
+        window.addEventListener("resize", reclampFloatingTerminal);
         
+        if (btnFloatTerminalLocal) {
+            btnFloatTerminalLocal.addEventListener("click", () => {
+                floatTerminalLog();
+                appendTerminalLines(["[SYSTEM] Agent log floated. Drag the header to reposition or use Dock to return."], "system");
+            });
+        }
+
         if (btnDockTerminal) {
             btnDockTerminal.addEventListener("click", () => {
-                terminalContainer.classList.remove("undocked");
-                terminalContainer.classList.remove("hero-snapped");
-                terminalContainer.style.left = "";
-                terminalContainer.style.top = "";
-                terminalContainer.style.width = "";
-                terminalContainer.style.height = "450px";
-                btnDockTerminal.style.display = "none";
-                
-                // Dock back to original position
-                const contentReport = document.getElementById("content-report");
-                if (contentReport && contentReport.parentNode) {
-                    contentReport.parentNode.insertBefore(terminalContainer, contentReport);
-                }
-                
-                const tabTerminal = document.getElementById("tab-terminal");
-                if (tabTerminal) tabTerminal.click();
+                dockTerminalLog();
             });
         }
     }
