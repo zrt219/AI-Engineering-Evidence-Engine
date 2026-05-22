@@ -14,6 +14,10 @@ The second screenshot opens the source-code proof drawer. That is the key behavi
 |---|---|
 | ![AAED dashboard overview](assets/aaed-dashboard-overview.png) | ![AAED proof drawer](assets/aaed-proof-drawer.png) |
 
+## Alternative console mode
+<img width="1562" height="1278" alt="image" src="https://github.com/user-attachments/assets/a1c85b21-b4b9-4300-8853-46665d2cc342" />
+
+
 ## What This Demonstrates
 
 - Interactive evidence surfacing for recruiter review
