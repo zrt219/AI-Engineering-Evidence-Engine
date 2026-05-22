@@ -6,19 +6,13 @@ This repository is the public landing page for the **AI Engineering Evidence Eng
 
 ## Visual Tour
 
-The first screenshot shows the full Atlas-style dashboard: verification posture, the ingest doctrine, the automation console, and the daily evidence panel.
+The dashboard is easier to understand in three states:
 
-The second screenshot opens the source-code proof drawer. That is the key behavior to notice, because it ties the dashboard back to real local code instead of leaving the system as a polished mockup.
+| Dashboard overview | Proof drawer | Docked console |
+|---|---|---|
+| ![AAED dashboard overview](assets/aaed-dashboard-overview.png) | ![AAED proof drawer](assets/aaed-proof-drawer.png) | ![AAED console docked](assets/aaed-console-docked.png) |
 
-## Dashboad overview 
-![AAED dashboard overview](assets/aaed-dashboard-overview.png) 
-
-## Source-code proof drawer
-![AAED proof drawer](assets/aaed-proof-drawer.png) |
-
-## Alternative console mode
-<img width="1562" height="1278" alt="image" src="https://github.com/user-attachments/assets/a1c85b21-b4b9-4300-8853-46665d2cc342" />
-
+The console log is intentionally draggable. When it is docked into the hero area, the live log stream sits beside the doctrine map so reviewers can see telemetry and proof in the same visual frame.
 
 ## What This Demonstrates
 
@@ -27,6 +21,7 @@ The second screenshot opens the source-code proof drawer. That is the key behavi
 - Secret-redaction and evidence-boundary controls
 - Source-code inspection from inside the dashboard
 - Clear state handling for verification, ingestion, and reporting
+- A draggable terminal mode that lets the log stream join the main evidence map
 
 ## Verified Implementation Signals
 
@@ -43,6 +38,7 @@ The codebase includes explicit proof-oriented UI patterns such as:
 - A source-code drawer for local proof inspection
 - Secret-redaction review flows
 - State handling around proof selection and UI synchronization
+- A dockable terminal that can be dragged into the hero zone for live log context
 
 ## Why an Employer Should Care
 
@@ -57,8 +53,8 @@ This project shows how I build under review conditions:
 
 If you only look at three things, look at these:
 
-1. The dashboard overview screenshot above.
-2. The proof drawer screenshot above.
+1. The dashboard overview screenshot.
+2. The docked console screenshot.
 3. The `app.js` and `index.html` implementation that drives the proof flow.
 
 ## Related Proof
